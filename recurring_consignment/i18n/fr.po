@@ -1,0 +1,165 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* recurring_consignment
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-10 16:35+0000\n"
+"PO-Revision-Date: 2015-12-10 16:35+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: recurring_consignment
+#: view:product.consigment.wizard:0
+msgid "All supplier informations will be dropped;"
+msgstr "All supplier informations will be dropped;"
+
+#. module: recurring_consignment
+#: view:product.consigment.wizard:0
+msgid "Apply"
+msgstr "Appliquer"
+
+#. module: recurring_consignment
+#: view:product.consigment.wizard:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: recurring_consignment
+#: view:product.product:0
+msgid "Consigment"
+msgstr "Dépôt Vente"
+
+#. module: recurring_consignment
+#: field:res.partner,consignment_commission:0
+msgid "Consignment Commission"
+msgstr "Commission sur dépôt vente"
+
+#. module: recurring_consignment
+#: field:account.tax,consignor_id:0
+#: field:product.consigment.wizard,consignor_id:0
+#: field:product.template,consignor_id:0
+#: view:res.partner:0
+#: field:tax.group,consignor_id:0
+msgid "Consignor"
+msgstr "Dépôt Vendeur"
+
+#. module: recurring_consignment
+#: code:addons/recurring_consignment/models/product_template.py:134
+#: code:addons/recurring_consignment/models/res_partner.py:57
+#, python-format
+msgid "Error!"
+msgstr "Erreur !"
+
+#. module: recurring_consignment
+#: field:product.template,is_consignment:0
+msgid "Is Consignment"
+msgstr "Dépôt Vente"
+
+#. module: recurring_consignment
+#: field:res.partner,is_consignor:0
+msgid "Is Consignor"
+msgstr "Est un dépôt Vendeur"
+
+#. module: recurring_consignment
+#: constraint:res.partner:0
+msgid "Is Consignor and Consignment commission should be set both."
+msgstr "Is Consignor and Consignment commission should be set both."
+
+#. module: recurring_consignment
+#: code:_description:0
+#: model:ir.model,name:recurring_consignment.model_res_partner
+#, python-format
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: recurring_consignment
+#: constraint:product.consigment.wizard:0
+msgid "Please select a Tax Group linked to the selected Consignor."
+msgstr "Please select a Tax Group linked to the selected Consignor."
+
+#. module: recurring_consignment
+#: code:_description:0
+#: model:ir.model,name:recurring_consignment.model_product_product
+#, python-format
+msgid "Product"
+msgstr "Article"
+
+#. module: recurring_consignment
+#: code:_description:0
+#: model:ir.model,name:recurring_consignment.model_product_template
+#, python-format
+msgid "Product Template"
+msgstr "Modèle d'article"
+
+#. module: recurring_consignment
+#: model:ir.actions.act_window,name:recurring_consignment.action_product_consigment_wizard
+#: view:product.consigment.wizard:0
+msgid "Set Consignor"
+msgstr "Set Consignor"
+
+#. module: recurring_consignment
+#: view:product.consigment.wizard:0
+msgid "Set consignor to products is irreversible. The following changes will be applied to the selected products"
+msgstr "Set consignor to products is irreversible. The following changes will be applied to the selected products"
+
+#. module: recurring_consignment
+#: code:_description:0
+#: model:ir.model,name:recurring_consignment.model_account_tax
+#, python-format
+msgid "Tax"
+msgstr "Taxes"
+
+#. module: recurring_consignment
+#: code:_description:0
+#: model:ir.model,name:recurring_consignment.model_tax_group
+#: field:product.consigment.wizard,tax_group_id:0
+#, python-format
+msgid "Tax Group"
+msgstr "Groupe de Taxe"
+
+#. module: recurring_consignment
+#: view:product.consigment.wizard:0
+msgid "The Cost Price will be set to 0;"
+msgstr "Le coût de revient sera mis à 0;"
+
+#. module: recurring_consignment
+#: view:product.consigment.wizard:0
+msgid "The product will be marked as purchasable;"
+msgstr "Le produit sera marqué comme pouvant être acheté;"
+
+#. module: recurring_consignment
+#: code:addons/recurring_consignment/models/product_template.py:135
+#, python-format
+msgid "You can not change consignor. Please create a new product"
+msgstr "Vous ne pouvez pas changer de dépôt vendeur. Veuillez créer un nouveau produit."
+
+#. module: recurring_consignment
+#: constraint:tax.group:0
+msgid "You can not set Supplier Taxes for tax groups used for consignment"
+msgstr "You can not set Supplier Taxes for tax groups used for consignment"
+
+#. module: recurring_consignment
+#: code:addons/recurring_consignment/models/res_partner.py:58
+#, python-format
+msgid "You can not unset consignor setting on partner.\n"
+" Please create a new one if you want to do so."
+msgstr "You can not unset consignor setting on partner.\n"
+" Please create a new one if you want to do so."
+
+#. module: recurring_consignment
+#: constraint:account.tax:0
+msgid "You have to set the same accounts as the supplier account of the selected consignor."
+msgstr "You have to set the same accounts as the supplier account of the selected consignor."
+
+#. module: recurring_consignment
+#: view:product.consigment.wizard:0
+msgid "or"
+msgstr "or"
+
+

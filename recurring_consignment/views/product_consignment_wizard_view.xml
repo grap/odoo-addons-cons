@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ********************************************************************** -->
+<!--    Sale - Recurring Consignment module for Odoo                        -->
+<!--    Copyright (C) 2015-Today GRAP (http://www.grap.coop)                -->
+<!--    @author Sylvain LE GAL (https://twitter.com/legalsylvain)           -->
+
+<!--This program is free software: you can redistribute it and/or modify    -->
+<!--it under the terms of the GNU Affero General Public License as          -->
+<!--published by the Free Software Foundation, either version 3 of the      -->
+<!--License, or (at your option) any later version.                         -->
+
+<!--This program is distributed in the hope that it will be useful,         -->
+<!--but WITHOUT ANY WARRANTY; without even the implied warranty of          -->
+<!--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           -->
+<!--GNU Affero General Public License for more details.                     -->
+
+<!--You should have received a copy of the GNU Affero General Public License-->
+<!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
+<!-- ********************************************************************** -->
+<openerp>
+    <data>
+
+        <record id="view_product_consigment_wizard_form" model="ir.ui.view">
+            <field name="model">product.consigment.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Set Consignor" version="7.0">
+                    <group>
+                        <field name="consignor_id" />
+                        <field name="tax_group_id" />
+                    </group>
+                    <p class="oe_grey">
+                        Set consignor to products is irreversible. The following changes will be applied to the selected products
+                        <li>
+                            <ul>All supplier informations will be dropped;</ul>
+                            <ul>The Cost Price will be set to 0;</ul>
+                            <ul>The product will be marked as purchasable;</ul>
+                        </li>
+                    </p>
+                    <footer>
+                        <button string="Apply" name="apply" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" default_focus="1"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>
