@@ -21,7 +21,6 @@
 ##############################################################################
 
 from openerp.osv.orm import Model
-from openerp.osv import fields
 
 
 class product_product(Model):

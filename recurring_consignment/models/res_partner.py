@@ -54,13 +54,11 @@ class res_partner(Model):
 
     # Cosntraint section
     def write(self, cr, uid, ids, vals, context=None):
-        if 'is_consignor' in vals and vals.get('is_consignor') == False:
+        if 'is_consignor' in vals and vals.get('is_consignor') is False:
             for partner in self.browse(cr, uid, ids, context=context):
                 if partner.is_consignor:
-                    raise except_osv(
-                        _('Error!'),
-                        _("You can not unset consignor setting on partner.\n"
+                    raise except_osv(_('Error!'), _(
+                        "You can not unset consignor setting on partner.\n"
                         " Please create a new one if you want to do so."))
         return super(res_partner, self).write(
             cr, uid, ids, vals, context=context)
-

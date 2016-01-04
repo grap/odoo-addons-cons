@@ -23,6 +23,7 @@
 from openerp.osv.osv import except_osv
 from openerp.osv.orm import Model
 from openerp.osv import fields
+from openerp.tools.translate import _
 
 
 class product_template(Model):
@@ -32,7 +33,7 @@ class product_template(Model):
     def get_is_consignment(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for template in self.browse(cr, uid, ids, context=context):
-            res[template.id] = (template.consignor_id.id != False)
+            res[template.id] = (template.consignor_id.id is not False)
         print res
         return res
 
@@ -49,36 +50,35 @@ class product_template(Model):
             'tax.group', 'Tax Group',
             domain="[('company_id', '=', company_id),"
             "('consignor_id', '=', consignor_id)]",
-            # TODO set redaonly if consignor_id is set
-#            readonly="",
+            # TODO set readaonly if consignor_id is set
+            #            readonly="",
             help="Specify the combination of taxes for this product."
             " This field is required. If you dont find the correct Tax"
             " Group, Please create a new one or ask to your account"
             " manager if you don't have the access right."),
     }
 
-###    # Constraint Section
-###    def _check_consignor_id_fields(self, cr, uid, ids, context=None):
-###        print "CHECK"
-###        for template in self.browse(cr, uid, ids, context=context):
-###            if template.consignor_id:
-###                if template.standard_price:
-###                    return False
-###                elif len(template.seller_ids) != 0:
-###                    return False
-###                elif template.seller_ids[0].name.id\
-###                        != template.consignor_id.id:
-###                    return False
-###        return True
+    # Constraint Section
+    def _check_consignor_id_fields(self, cr, uid, ids, context=None):
+        for template in self.browse(cr, uid, ids, context=context):
+            if template.consignor_id:
+                if template.standard_price:
+                    return False
+                elif len(template.seller_ids) != 0:
+                    return False
+                elif template.seller_ids[0].name.id\
+                        != template.consignor_id.id:
+                    return False
+        return True
 
-###    _constraints = [
-###        (
-###            _check_consignor_id_fields,
-###            "A consigned product must have null Cost Price.\n"
-###            "A consigned product must have a uniq supplier.\n"
-###            "The supplier of the consigned product should be the consignor.\n",
-###            ['consignor_id', 'seller_ids']),
-###    ]
+    _constraints = [
+        (
+            _check_consignor_id_fields,
+            "A consigned product must have null Cost Price.\n"
+            "A consigned product must have a uniq supplier.\n"
+            "The supplier of the consigned product should be the consignor.\n",
+            ['consignor_id', 'seller_ids']),
+    ]
 
     def update_vals_consignor(self, cr, uid, vals, context=None):
         partner_obj = self.pool['res.partner']
@@ -93,34 +93,12 @@ class product_template(Model):
             vals
         return vals
 
-#    def update_product_consignor(self, cr, uid, ids, vals, context=None):
-#        product_obj = self.pool['product.product']
-
-#        if vals.get('consignor_id', False):
-#            for template in self.browse(cr, uid, ids, context=context):
-#                if template.is_consignment:
-#                    product_ids = product_obj.search(
-#                        cr, uid, [('product_tmpl_id', '=', template.id)],
-#                        context=context)
-#                    product_obj.write(cr, uid, product_ids, {
-#                        'cost_price': 0,
-#                    }, context=context)
-                
     def create(self, cr, uid, vals, context=None):
-        print "**********************************"
-        print "CREATE"
-        print vals
         vals = self.update_vals_consignor(cr, uid, vals, context=context)
-        print "*******"
-        print vals
         return super(product_template, self).create(
             cr, uid, vals, context=context)
 
-
     def write(self, cr, uid, ids, vals, context=None):
-        print "**********************************"
-        print "WRITE"
-        print vals
         vals = self.update_vals_consignor(cr, uid, vals, context=context)
         return super(product_template, self).write(
             cr, uid, ids, vals, context=context)
@@ -130,10 +108,9 @@ class product_template(Model):
             self, cr, uid, ids, consignor_id, tax_group_id, context=None):
         for template in self.browse(cr, uid, ids, context=context):
             if template.consignor_id:
-                raise osv.except_osv(
-                    _('Error!'),
-                    _("You can not change consignor. Please create a"
-                    " new product"))
+                raise except_osv(_('Error!'), _(
+                    "You can not change consignor. Please create a new"
+                    " product"))
         self.write(cr, uid, ids, {
             'consignor_id': consignor_id,
             'tax_group_id': tax_group_id,

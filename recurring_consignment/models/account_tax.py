@@ -47,7 +47,6 @@ class account_tax(Model):
             'account_paid_id': partner.property_account_payable.id,
         }}
 
-
     # Constraint Section
     def _check_consignor_taxes(self, cr, uid, ids, context=None):
         for tax in self.browse(cr, uid, ids, context=context):
