@@ -25,11 +25,11 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <field name="parent_id" position="before">
-                    <field name="is_consignor" groups="recurring_consignment.group_consignment_user"/>
-                    <label for="is_consignor" groups="recurring_consignment.group_consignment_user"/>
+                    <field name="is_consignor" groups="recurring_consignment.group_consignment_manager"/>
+                    <label for="is_consignor" groups="recurring_consignment.group_consignment_manager"/>
                 </field>
                 <field name="property_account_payable" position="after">
-                    <field name="consignment_commission" groups="recurring_consignment.group_consignment_user"/>
+                    <field name="consignment_commission" groups="recurring_consignment.group_consignment_manager"/>
                 </field>
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <span class="consigment_label" attrs="{'invisible': [('is_consignor','=', False)]}"
