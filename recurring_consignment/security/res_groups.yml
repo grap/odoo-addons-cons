@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Sale - Recurring Consignment module for Odoo
-#    Copyright (C) 2014 GRAP (http://www.grap.coop)
+#    Sale - Recurring Consignment Module for Odoo
+#    Copyright (C) 2015-Today GRAP (http://www.grap.coop)
 #    @author Sylvain LE GAL (https://twitter.com/legalsylvain)
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,17 +20,12 @@
 #
 ##############################################################################
 
-from openerp.osv.orm import Model
+- !record {model: res.groups, id: group_consignment_user}:
+    category_id: module_category_consignment
+    name: User
 
-
-class product_product(Model):
-    _inherit = 'product.product'
-
-    # View Section
-    def onchange_consignor_id(self, cr, uid, ids, consignor_id, context=None):
-        """Set to False Tax group_id to force user to set correct new tax
-        group depending of the context"""
-        if consignor_id:
-            return {'value': {'tax_group_id': False}}
-        else:
-            return True
+- !record {model: res.groups, id: group_consignment_manager}:
+    category_id: module_category_consignment
+    name: Manager
+    implied_ids:
+        - group_consignment_user

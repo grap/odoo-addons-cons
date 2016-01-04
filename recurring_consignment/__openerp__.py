@@ -77,11 +77,14 @@ Copyright, Authors and Licence:
         'purchase',
     ],
     'data': [
+        'security/ir_module_category.yml',
+        'security/res_groups.yml',
         'views/account_tax_view.xml',
         'views/tax_group_view.xml',
         'views/res_partner_view.xml',
         'views/product_product_view.xml',
         'views/action.xml',
+        'views/menu.xml',
     ],
     'demo': [
         'demo/res_groups.yml',

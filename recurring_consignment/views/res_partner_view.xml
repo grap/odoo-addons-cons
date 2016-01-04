@@ -22,17 +22,18 @@
 
         <record id="view_res_partner_form" model="ir.ui.view">
             <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <field name="parent_id" position="before">
-                    <field name="is_consignor"/>
-                    <label for="is_consignor"/>
+                    <field name="is_consignor" groups="recurring_consignment.group_consignment_user"/>
+                    <label for="is_consignor" groups="recurring_consignment.group_consignment_user"/>
                 </field>
                 <field name="property_account_payable" position="after">
-                    <field name="consignment_commission"/>
+                    <field name="consignment_commission" groups="recurring_consignment.group_consignment_user"/>
                 </field>
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <span class="consigment_label" attrs="{'invisible': [('is_consignor','=', False)]}">Consignor</span>
+                    <span class="consigment_label" attrs="{'invisible': [('is_consignor','=', False)]}"
+                        groups="recurring_consignment.group_consignment_user">Consignor</span>
                 </xpath>
             </field>
         </record>

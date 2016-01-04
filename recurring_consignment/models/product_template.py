@@ -34,7 +34,6 @@ class product_template(Model):
         res = {}
         for template in self.browse(cr, uid, ids, context=context):
             res[template.id] = (template.consignor_id.id is not False)
-        print res
         return res
 
     # Columns Section
@@ -50,8 +49,6 @@ class product_template(Model):
             'tax.group', 'Tax Group',
             domain="[('company_id', '=', company_id),"
             "('consignor_id', '=', consignor_id)]",
-            # TODO set readaonly if consignor_id is set
-            #            readonly="",
             help="Specify the combination of taxes for this product."
             " This field is required. If you dont find the correct Tax"
             " Group, Please create a new one or ask to your account"
@@ -64,19 +61,14 @@ class product_template(Model):
             if template.consignor_id:
                 if template.standard_price:
                     return False
-                elif len(template.seller_ids) != 0:
-                    return False
-                elif template.seller_ids[0].name.id\
-                        != template.consignor_id.id:
-                    return False
         return True
 
     _constraints = [
         (
             _check_consignor_id_fields,
-            "A consigned product must have null Cost Price.\n"
-            "A consigned product must have a uniq supplier.\n"
-            "The supplier of the consigned product should be the consignor.\n",
+            "A consigned product must have null Cost Price.\n",
+            # "A consigned product must have a uniq supplier.\n"
+            # "The supplier of a consigned product should be the consignor.\n",
             ['consignor_id', 'seller_ids']),
     ]
 
@@ -90,7 +82,12 @@ class product_template(Model):
                 partner.property_account_payable.id
             vals['property_account_expense'] =\
                 partner.property_account_payable.id
-            vals
+            vals['seller_ids'] = [[0, False, {
+                'name': vals.get('consignor_id'),
+                'company_id': partner.company_id.id,
+                'pricelist_ids': [],
+                'package_qty': 1,  # FIXME
+            }]]
         return vals
 
     def create(self, cr, uid, vals, context=None):

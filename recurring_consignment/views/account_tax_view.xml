@@ -25,7 +25,8 @@
             <field name="inherit_id" ref="account.view_tax_form" />
             <field name="arch" type="xml">
                 <field name="description" position="after">
-                    <field name="consignor_id" on_change="on_change_consignor_id(consignor_id)"/>
+                    <field name="consignor_id" on_change="on_change_consignor_id(consignor_id)" 
+                        groups="recurring_consignment.group_consignment_user"/>
                 </field>
             </field>
         </record>
