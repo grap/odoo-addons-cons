@@ -81,7 +81,6 @@ Copyright, Authors and Licence:
         'views/tax_group_view.xml',
         'views/res_partner_view.xml',
         'views/product_product_view.xml',
-        'views/product_consignment_wizard_view.xml',
         'views/action.xml',
     ],
     'demo': [

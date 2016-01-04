@@ -20,10 +20,5 @@
 <openerp>
     <data>
 
-        <act_window id="action_product_consigment_wizard"
-            multi="True" key2="client_action_multi" name="Set Consignor"
-            res_model="product.consigment.wizard" src_model="product.product"
-            view_mode="form" target="new" view_type="form" />
-
     </data>
 </openerp>
