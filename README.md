@@ -4,4 +4,4 @@
 odoo-addons-cons
 ================
 
-Modules developped by GRAP to manage consignment
+Modules developped by GRAP to manage consignment.
