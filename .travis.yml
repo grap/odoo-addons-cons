@@ -20,6 +20,11 @@ env:
   - VERSION="7.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0" EXCLUDE="grap_print_product"
   - VERSION="7.0" UNIT_TEST="1" LINT_CHECK="0" EXCLUDE="grap_print_product"
 
+before_install:
+  - sudo pip install GitPython bzr
+  - sudo pip install cairosvg
+  - sudo pip install barcode    # FIXME bad version of barcode in pip
+
 virtualenv:
   system_site_packages: true
 
