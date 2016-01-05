@@ -24,3 +24,5 @@
     code: X111-CONS
     name: Demo Account For Consignor
     parent_id: account.cas
+    type: other
+    user_type: account.data_account_type_payable
