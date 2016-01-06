@@ -34,24 +34,6 @@ class res_partner(Model):
         'consignment_commission': fields.float('Consignment Commission'),
     }
 
-    # Constraint Section
-    def _check_consignor_fields(self, cr, uid, ids, context=None):
-        for partner in self.browse(cr, uid, ids, context=context):
-            if partner.is_consignor:
-                if not partner.consignment_commission:
-                    return False
-            else:
-                if partner.consignment_commission:
-                    return False
-        return True
-
-    _constraints = [
-        (
-            _check_consignor_fields,
-            "Is Consignor and Consignment commission should be set both.",
-            ['is_consignor', 'consignment_commission']),
-    ]
-
     # Cosntraint section
     def write(self, cr, uid, ids, vals, context=None):
         if 'is_consignor' in vals and vals.get('is_consignor') is False:
