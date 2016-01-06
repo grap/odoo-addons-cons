@@ -38,5 +38,29 @@
             </field>
         </record>
 
+        <record id="view_res_partner_tree" model="ir.ui.view">
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Consignors" editable="bottom"
+                        colors="gray:is_consignor==False; brown:consignment_commission == 0">
+                    <field name="name" readonly="1"/>
+                    <field name="is_consignor"/>
+                    <field name="consignment_commission"/>
+                    <field name="property_account_payable"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_res_partner_search" model="ir.ui.view">
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <filter name="supplier" position="after">
+                    <filter string="Is Consignor" name="is_consignor" domain="[('is_consignor', '=', True)]"/>
+                </filter>
+            </field>
+        </record>
+
+
     </data>
 </openerp>

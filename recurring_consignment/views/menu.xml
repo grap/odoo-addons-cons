@@ -26,5 +26,11 @@
             action="action_product_product_consignment"
             groups="recurring_consignment.group_consignment_user"/>
 
+<!-- Model: res.partner -->
+        <menuitem id="menu_res_partner" 
+            parent="base.menu_sales" sequence="21"
+            action="action_res_partner"
+            groups="recurring_consignment.group_consignment_user"/>
+
     </data>
 </openerp>
