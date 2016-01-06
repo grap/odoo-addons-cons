@@ -43,7 +43,7 @@ For other implementation of consigment you could see:
 Functionality
 -------------
 
-TODO : 
+TODO :
 - basic user can only change location and email.
 Partner Model
 
