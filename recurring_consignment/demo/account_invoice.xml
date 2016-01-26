@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ********************************************************************** -->
+<!--    Sale - Recurring Consignment module for Odoo                        -->
+<!--    Copyright (C) 2015-Today GRAP (http://www.grap.coop)                -->
+<!--    @author Sylvain LE GAL (https://twitter.com/legalsylvain)           -->
+
+<!--This program is free software: you can redistribute it and/or modify    -->
+<!--it under the terms of the GNU Affero General Public License as          -->
+<!--published by the Free Software Foundation, either version 3 of the      -->
+<!--License, or (at your option) any later version.                         -->
+
+<!--This program is distributed in the hope that it will be useful,         -->
+<!--but WITHOUT ANY WARRANTY; without even the implied warranty of          -->
+<!--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           -->
+<!--GNU Affero General Public License for more details.                     -->
+
+<!--You should have received a copy of the GNU Affero General Public License-->
+<!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
+<!-- ********************************************************************** -->
+<openerp><data>
+
+    <record id="customer_invoice_1" model="account.invoice">
+        <field name="currency_id" ref="base.EUR"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="journal_id" ref="account.sales_journal"/>
+        <field name="state">draft</field>
+        <field name="type">out_invoice</field>
+        <field name="account_id" ref="account.a_recv"/>
+        <field name="name">My Commissions Invoice</field>
+    </record>
+
+    <record id="customer_invoice_1_line_1" model="account.invoice.line">
+        <field name="name">My Consigned Product (VAT 5%)</field>
+        <field name="product_id" ref="consigned_product_consignor_1_vat_5"/>
+        <field name="invoice_id" ref="customer_invoice_1"/>
+        <field name="account_id" ref="account_consignor_1" />
+        <field name="price_unit">10</field>
+        <field name="quantity">1</field>
+        <field name="invoice_line_tax_id" eval="[(6,0,[ref('tax_5_consignor_1')])]"/>
+    </record>
+
+    <record id="customer_invoice_1_line_2" model="account.invoice.line">
+        <field name="name">My Consigned Product (VAT 20%)</field>
+        <field name="product_id" ref="consigned_product_consignor_1_vat_20"/>
+        <field name="invoice_id" ref="customer_invoice_1"/>
+        <field name="account_id" ref="account_consignor_1" />
+        <field name="price_unit">100</field>
+        <field name="quantity">1</field>
+        <field name="invoice_line_tax_id" eval="[(6,0,[ref('tax_20_consignor_1')])]"/>
+    </record>
+
+    <!-- Generate Taxes-->
+    <function model="account.invoice" name="button_reset_taxes">
+        <value eval="[ref('customer_invoice_1')]"/>
+    </function>
+
+    <!-- Confirm Invoice-->
+    <workflow model="account.invoice" action="invoice_open" ref="customer_invoice_1"/>
+
+</data></openerp>

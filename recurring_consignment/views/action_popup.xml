@@ -19,16 +19,15 @@
 <!-- ********************************************************************** -->
 
 <openerp><data>
-<!-- Model: product.product -->
-    <menuitem id="menu_product_product_consignment" 
-        parent="base.menu_product" sequence="15" 
-        action="action_product_product_consignment"
-        groups="recurring_consignment.group_consignment_user"/>
 
-<!-- Model: res.partner -->
-    <menuitem id="menu_res_partner" 
-        parent="base.menu_sales" sequence="21"
-        action="action_res_partner"
-        groups="recurring_consignment.group_consignment_manager"/>
+<!-- Model: invoice.commission.wizard -->
+    <record id="action_invoice_commission_wizard" model="ir.actions.act_window">
+        <field name="name">Make Commissions Invoice</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">invoice.commission.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 
 </data></openerp>

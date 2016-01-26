@@ -17,18 +17,16 @@
 <!--You should have received a copy of the GNU Affero General Public License-->
 <!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
 <!-- ********************************************************************** -->
-
 <openerp><data>
-<!-- Model: product.product -->
-    <menuitem id="menu_product_product_consignment" 
-        parent="base.menu_product" sequence="15" 
-        action="action_product_product_consignment"
-        groups="recurring_consignment.group_consignment_user"/>
 
-<!-- Model: res.partner -->
-    <menuitem id="menu_res_partner" 
-        parent="base.menu_sales" sequence="21"
-        action="action_res_partner"
-        groups="recurring_consignment.group_consignment_manager"/>
+    <record id="view_account_tax_code_form" model="ir.ui.view">
+        <field name="model">account.tax.code</field>
+        <field name="inherit_id" ref="account.view_tax_code_form" />
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="consignment_product_id" groups="recurring_consignment.group_consignment_manager"/>
+            </field>
+        </field>
+    </record>
 
 </data></openerp>

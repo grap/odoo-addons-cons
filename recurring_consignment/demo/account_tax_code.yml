@@ -20,25 +20,18 @@
 #
 ##############################################################################
 
-- !record {model: res.groups, id: account.group_account_manager}:
-    users:
-        - base.user_root
+- !record {model: account.tax.code, id: tax_code_base_5}:
+    name: Tax Code (Base VAT. 5%)
+    code: Amount 5%
 
-- !record {model: res.groups, id: base.group_sale_manager}:
-    users:
-        - base.user_root
+- !record {model: account.tax.code, id: tax_code_base_20}:
+    name: Tax Code (Base VAT. 20%)
+    code: Amount 20%
 
-- !record {model: res.groups, id: base.group_no_one}:
-    users:
-        - base.user_root
+- !record {model: account.tax.code, id: tax_code_vat_5}:
+    name: Tax Code (VAT 5%)
+    code: VAT 5%
 
-- !record {model: res.groups, id: group_consignment_manager}:
-    users:
-        - base.user_root
-
-- !record {model: res.groups, id: group_consignment_user}:
-    users:
-        - base.user_demo
-
-
-
+- !record {model: account.tax.code, id: tax_code_vat_20}:
+    name: Tax Code (VAT 20%)
+    code: VAT 20%

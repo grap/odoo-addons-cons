@@ -18,30 +18,28 @@
 <!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
 <!-- ********************************************************************** -->
 
-<openerp>
-    <data>
+<openerp><data>
 
 <!-- Model: product.product -->
-        <record id="action_product_product_consignment" model="ir.actions.act_window">
-            <field name="name">Products (Consignment)</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="context">{'search_default_is_consignment':1}</field>
-            <field name="view_id" ref="view_product_product_consignment_tree"/>
-        </record>
+    <record id="action_product_product_consignment" model="ir.actions.act_window">
+        <field name="name">Products (Consignment)</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.product</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'search_default_is_consignment':1}</field>
+        <field name="view_id" ref="view_product_product_consignment_tree"/>
+    </record>
 
 <!-- Model: res.partner -->
-        <record id="action_res_partner" model="ir.actions.act_window">
-            <field name="name">Consignors</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_is_consignor':1}</field>
-            <field name="view_id" ref="view_res_partner_tree" />
-        </record>
+    <record id="action_res_partner" model="ir.actions.act_window">
+        <field name="name">Consignors</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_is_consignor':1}</field>
+        <field name="view_id" ref="view_res_partner_tree" />
+    </record>
 
-    </data>
-</openerp>
+</data></openerp>

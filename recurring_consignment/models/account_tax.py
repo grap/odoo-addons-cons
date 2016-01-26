@@ -29,31 +29,33 @@ class account_tax(Model):
 
     # Columns Section
     _columns = {
-        'consignor_id': fields.many2one(
+        'consignor_partner_id': fields.many2one(
             'res.partner', string='Consignor',
-            domain="[('is_consignor', '=', True)]"),
+            domain="[('is_consignor', '=', True)]",
+            oldname='consignor_id'),
     }
 
-    def on_change_consignor_id(self, cr, uid, ids, consignor_id, context=None):
+    def on_change_consignor_partner_id(
+            self, cr, uid, ids, consignor_partner_id, context=None):
         partner_obj = self.pool['res.partner']
 
-        if not consignor_id:
+        if not consignor_partner_id:
             return {}
         else:
             partner = partner_obj.browse(
-                cr, uid, consignor_id, context=context)
+                cr, uid, consignor_partner_id, context=context)
         return {'value': {
-            'account_collected_id': partner.property_account_payable.id,
-            'account_paid_id': partner.property_account_payable.id,
+            'account_collected_id': partner.consignment_account_id.id,
+            'account_paid_id': partner.consignment_account_id.id,
         }}
 
     # Constraint Section
     def _check_consignor_taxes(self, cr, uid, ids, context=None):
         for tax in self.browse(cr, uid, ids, context=context):
-            if tax.consignor_id:
-                if tax.consignor_id.property_account_payable.id !=\
+            if tax.consignor_partner_id:
+                if tax.consignor_partner_id.consignment_account_id.id !=\
                         tax.account_collected_id.id or\
-                        tax.consignor_id.property_account_payable.id !=\
+                        tax.consignor_partner_id.consignment_account_id.id !=\
                         tax.account_paid_id.id:
                     return False
         return True
@@ -63,5 +65,6 @@ class account_tax(Model):
             _check_consignor_taxes,
             "You have to set the same"
             " accounts as the supplier account of the selected consignor.",
-            ['consignor_id', 'account_collected_id', 'account_paid_id'])
+            ['consignor_partner_id', 'account_collected_id',
+                'account_paid_id'])
     ]

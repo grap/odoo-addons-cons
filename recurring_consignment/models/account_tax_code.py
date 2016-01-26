@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Sale - Recurring Consignment module for Odoo
-#    Copyright (C) 2015-Today GRAP (http://www.grap.coop)
+#    Copyright (C) 2015 GRAP (http://www.grap.coop)
 #    @author Sylvain LE GAL (https://twitter.com/legalsylvain)
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,25 +20,21 @@
 #
 ##############################################################################
 
-- !record {model: res.groups, id: account.group_account_manager}:
-    users:
-        - base.user_root
-
-- !record {model: res.groups, id: base.group_sale_manager}:
-    users:
-        - base.user_root
-
-- !record {model: res.groups, id: base.group_no_one}:
-    users:
-        - base.user_root
-
-- !record {model: res.groups, id: group_consignment_manager}:
-    users:
-        - base.user_root
-
-- !record {model: res.groups, id: group_consignment_user}:
-    users:
-        - base.user_demo
+from openerp.osv.orm import Model
+from openerp.osv import fields
 
 
+class account_tax_code(Model):
+    _inherit = 'account.tax.code'
 
+    # Columns Section
+    _columns = {
+        'consignment_product_id': fields.many2one(
+            'product.product', string='Consignment Product',
+            domain="[('type', '=', 'service')]",
+            help="Set a 'Sales commission' product for consignment sales.\n"
+            "If not set, transaction will not be commissioned. (this case is"
+            " usefull to avoid to commission taxes transaction, because in"
+            " most cases, commissions are computed on without taxes amount)."
+            ),
+    }

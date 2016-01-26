@@ -27,10 +27,11 @@ class product_product(Model):
     _inherit = 'product.product'
 
     # View Section
-    def onchange_consignor_id(self, cr, uid, ids, consignor_id, context=None):
+    def onchange_consignor_partner_id(
+            self, cr, uid, ids, consignor_partner_id, context=None):
         """Set to False Tax group_id to force user to set correct new tax
         group depending of the context"""
-        if consignor_id:
+        if consignor_partner_id:
             return {'value': {'tax_group_id': False}}
         else:
             return True

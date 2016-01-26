@@ -17,18 +17,16 @@
 <!--You should have received a copy of the GNU Affero General Public License-->
 <!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
 <!-- ********************************************************************** -->
-<openerp>
-    <data>
+<openerp><data>
 
-        <record id="view_tax_group_form" model="ir.ui.view">
-            <field name="model">tax.group</field>
-            <field name="inherit_id" ref="product_taxes_group.view_tax_group_form" />
-            <field name="arch" type="xml">
-                <field name="active" position="before">
-                    <field name="consignor_id" groups="recurring_consignment.group_consignment_user"/>
-                </field>
+    <record id="view_tax_group_form" model="ir.ui.view">
+        <field name="model">tax.group</field>
+        <field name="inherit_id" ref="product_taxes_group.view_tax_group_form" />
+        <field name="arch" type="xml">
+            <field name="active" position="before">
+                <field name="consignor_partner_id" groups="recurring_consignment.group_consignment_manager"/>
             </field>
-        </record>
+        </field>
+    </record>
 
-    </data>
-</openerp>
+</data></openerp>

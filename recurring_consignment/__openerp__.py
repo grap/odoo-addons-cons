@@ -51,18 +51,11 @@ Partner Model
 
 Product Model
 
-* Add a consignor_id field (res.partner), indicating which partner provide
-  the product;
-* if consignor_id is defined:
+* Add a consignor_partner_id field (res.partner), indicating which partner
+  provide the product;
+* if consignor_partner_id is defined:
     * The product can not have seller_ids defined;
     * The product has a special VAT defined;
-
-TODO
-
-* wizard to set consignor to a product;
-    * ask the consignor_id;
-    * ask the vat;
-    * ask the
 
 Copyright, Authors and Licence:
 -------------------------------
@@ -76,15 +69,19 @@ Copyright, Authors and Licence:
     'license': 'AGPL-3',
     'depends': [
         'product_taxes_group',
+        'simple_tax_account',
         'purchase',
     ],
     'data': [
         'security/ir_module_category.yml',
         'security/res_groups.yml',
+        'views/action_popup.xml',
         'views/account_tax_view.xml',
+        'views/account_tax_code_view.xml',
         'views/tax_group_view.xml',
-        'views/res_partner_view.xml',
         'views/product_product_view.xml',
+        'views/invoice_commission_wizard_view.xml',
+        'views/res_partner_view.xml',
         'views/action.xml',
         'views/menu.xml',
     ],
@@ -92,6 +89,11 @@ Copyright, Authors and Licence:
         'demo/res_groups.yml',
         'demo/account_account.yml',
         'demo/res_partner.yml',
+        'demo/account_tax_code.yml',
+        'demo/account_tax.yml',
+        'demo/tax_group.yml',
+        'demo/product_product.yml',
+        'demo/account_invoice.xml',
     ],
     'css': [
         'static/src/css/recurring_consignment.css',

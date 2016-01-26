@@ -20,8 +20,11 @@
 #
 ##############################################################################
 
-- !record {model: account.account, id: account_for_consignor}:
-    code: X111-CONS
+- !context
+    noupdate: 0
+
+- !record {model: account.account, id: account_consignor_1}:
+    code: X111-CONSIG
     name: Demo Account For Consignor
     parent_id: account.cas
     type: other

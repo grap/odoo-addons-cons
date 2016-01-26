@@ -29,15 +29,17 @@ class tax_group(Model):
 
     # Columns Section
     _columns = {
-        'consignor_id': fields.many2one(
+        'consignor_partner_id': fields.many2one(
             'res.partner', string='Consignor',
-            domain="[('is_consignor', '=', True)]"),
+            domain="[('is_consignor', '=', True)]",
+            oldname='consignor_id'),
     }
 
     # Constraint Section
     def _check_consignor_supplier_tax_ids(self, cr, uid, ids, context=None):
         for tax_group in self.browse(cr, uid, ids, context=context):
-            if (tax_group.consignor_id and len(tax_group.supplier_tax_ids)):
+            if (tax_group.consignor_partner_id and
+                    len(tax_group.supplier_tax_ids)):
                 return False
         return True
 
@@ -45,5 +47,5 @@ class tax_group(Model):
         (
             _check_consignor_supplier_tax_ids,
             "You can not set Supplier Taxes for tax groups used for"
-            " consignment", ['supplier_tax_ids', 'consignor_id'])
+            " consignment", ['supplier_tax_ids', 'consignor_partner_id'])
     ]

@@ -28,4 +28,4 @@
     category_id: module_category_consignment
     name: Manager
     implied_ids:
-        - group_consignment_user
+        - recurring_consignment.group_consignment_user

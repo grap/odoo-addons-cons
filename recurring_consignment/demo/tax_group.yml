@@ -20,25 +20,22 @@
 #
 ##############################################################################
 
-- !record {model: res.groups, id: account.group_account_manager}:
-    users:
-        - base.user_root
+- !record {model: tax.group, id: tax_group_5_vat_include}:
+    name: Tax Group 5% (5% VAT Incl.)
+    customer_tax_ids:
+        - simple_tax_account.vat_5_include
 
-- !record {model: res.groups, id: base.group_sale_manager}:
-    users:
-        - base.user_root
+- !record {model: tax.group, id: tax_group_20_vat_exclude}:
+    name: Tax Group 20%
+    customer_tax_ids:
+        - simple_tax_account.vat_20_exclude
 
-- !record {model: res.groups, id: base.group_no_one}:
-    users:
-        - base.user_root
+- !record {model: tax.group, id: tax_group_5_consignor_1}:
+    name: Tax Group 5% (Consignor 1)
+    customer_tax_ids:
+        - tax_5_consignor_1
 
-- !record {model: res.groups, id: group_consignment_manager}:
-    users:
-        - base.user_root
-
-- !record {model: res.groups, id: group_consignment_user}:
-    users:
-        - base.user_demo
-
-
-
+- !record {model: tax.group, id: tax_group_20_consignor_1}:
+    name: Tax Group 20% (Consignor 1)
+    customer_tax_ids:
+        - tax_20_consignor_1

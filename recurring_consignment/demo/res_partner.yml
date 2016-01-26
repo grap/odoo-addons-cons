@@ -20,11 +20,10 @@
 #
 ##############################################################################
 
-- !record {model: res.partner, id: my_consignor_with_vat}:
-    name: My Consignor with VAT
+- !record {model: res.partner, id: consignor_1}:
+    name: My Consignor #1 (with VAT)
     customer: True
     supplier: False
     is_consignor: True
     consignment_commission: 15
-    property_account_receivable: account_for_consignor
-    property_account_payable: account_for_consignor
+    consignment_account_id: account_consignor_1
