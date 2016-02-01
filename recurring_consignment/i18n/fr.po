@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-28 16:31+0000\n"
-"PO-Revision-Date: 2016-01-28 16:31+0000\n"
+"POT-Creation-Date: 2016-02-01 22:48+0000\n"
+"PO-Revision-Date: 2016-02-01 22:48+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -64,6 +64,7 @@ msgstr "Commissions sur vente et avoir sur vente\n"
 
 #. module: recurring_consignment
 #: view:account.invoice:0
+#: field:account.invoice,consignment_line_ids:0
 msgid "Commissionned Lines"
 msgstr "Lignes commissionnées"
 
@@ -78,14 +79,9 @@ msgid "Consigment"
 msgstr "Dépôt Vente"
 
 #. module: recurring_consignment
-#: field:account.invoice,consignment_line_ids:0
-msgid "Consigned Lines"
-msgstr "Consigned Lines"
-
-#. module: recurring_consignment
 #: field:res.partner,consignment_account_id:0
 msgid "Consignment Account"
-msgstr "Consignment Account"
+msgstr "Compte de dépôt vente"
 
 #. module: recurring_consignment
 #: field:account.move.line,consignment_commission:0
@@ -96,12 +92,12 @@ msgstr "Commission sur dépôt vente"
 #. module: recurring_consignment
 #: field:account.move.line,consignment_invoice_id:0
 msgid "Consignment Invoice"
-msgstr "Consignment Invoice"
+msgstr "Facture de commission"
 
 #. module: recurring_consignment
 #: field:account.tax.code,consignment_product_id:0
 msgid "Consignment Product"
-msgstr "Consignment Product"
+msgstr "Produit de commission"
 
 #. module: recurring_consignment
 #: field:account.tax,consignor_partner_id:0
@@ -117,14 +113,14 @@ msgstr "Dépôt Vendeur"
 #: model:ir.ui.menu,name:recurring_consignment.menu_res_partner
 #: view:res.partner:0
 msgid "Consignors"
-msgstr "Consignors"
+msgstr "Dépôt vendeurs"
 
 #. module: recurring_consignment
 #: code:addons/recurring_consignment/models/invoice_commission_wizard.py:99
 #: code:addons/recurring_consignment/models/res_partner.py:86
 #, python-format
 msgid "Error!"
-msgstr "Error!"
+msgstr "Erreur !"
 
 #. module: recurring_consignment
 #: code:_description:0
@@ -142,7 +138,7 @@ msgstr "Dépôt vente"
 #. module: recurring_consignment
 #: field:account.invoice,is_consignment_invoice:0
 msgid "Is Consignment Invoice"
-msgstr "Is Consignment Invoice"
+msgstr "Est une facture de commission"
 
 #. module: recurring_consignment
 #: view:res.partner:0
@@ -160,14 +156,14 @@ msgstr "Écritures comptables"
 #. module: recurring_consignment
 #: view:account.invoice:0
 msgid "Lines"
-msgstr "Lines"
+msgstr "Lignes"
 
 #. module: recurring_consignment
 #: view:invoice.commission.wizard:0
 #: model:ir.actions.act_window,name:recurring_consignment.action_invoice_commission_wizard
 #: view:res.partner:0
 msgid "Make Commissions Invoice"
-msgstr "Make Commissions Invoice"
+msgstr "Faire la facture de commissions"
 
 #. module: recurring_consignment
 #: model:res.groups,name:recurring_consignment.group_consignment_manager
@@ -177,7 +173,7 @@ msgstr "Responsable"
 #. module: recurring_consignment
 #: field:invoice.commission.wizard,line_qty:0
 msgid "Move Lines Quantity"
-msgstr "Move Lines Quantity"
+msgstr "Nombre d'écritures comptable"
 
 #. module: recurring_consignment
 #: code:_description:0
@@ -216,8 +212,8 @@ msgstr "Vente - Dépôt Vente"
 #: help:account.tax.code,consignment_product_id:0
 msgid "Set a 'Sales commission' product for consignment sales.\n"
 "If not set, transaction will not be commissioned. (this case is usefull to avoid to commission taxes transaction, because in most cases, commissions are computed on without taxes amount)."
-msgstr "Set a 'Sales commission' product for consignment sales.\n"
-"If not set, transaction will not be commissioned. (this case is usefull to avoid to commission taxes transaction, because in most cases, commissions are computed on without taxes amount)."
+msgstr "Indiquer un produit de type 'commission sur vente' pour les commissions sur dépôts ventes.\n"
+"Si non renseigné, la transaction ne sera pas commissionnée. (Ce cas est utile pour éviter de commissionner les transactions de taxes, car dans la plus part des cas, les commissions sont calculées sur le montant hors taxe)."
 
 #. module: recurring_consignment
 #: view:invoice.commission.wizard:0
@@ -248,7 +244,7 @@ msgstr "Groupe de Taxe"
 #: code:addons/recurring_consignment/models/invoice_commission_wizard.py:99
 #, python-format
 msgid "There is no move lines to commission for this consignor and this accounting period."
-msgstr "There is no move lines to commission for this consignor and this accounting period."
+msgstr "Il n'y a pasd d'écritures comptables à commissionner pour ce dépôt vendeur et pour la période sélectionnée."
 
 #. module: recurring_consignment
 #: model:res.groups,name:recurring_consignment.group_consignment_user
@@ -272,16 +268,4 @@ msgstr "Vous ne pouvez pas retirer le fait que ce partenaire soit un dépôt ven
 #: constraint:account.tax:0
 msgid "You have to set the same accounts as the supplier account of the selected consignor."
 msgstr "Vous devez mettre le même compte que le compte fournisseur du dépôt vendeur sélectionné."
-
-#. module: recurring_consignment
-#: model:ir.model,name:recurring_consignment.model_account_tax
-msgid "account.tax"
-msgstr "account.tax"
-
-#. module: recurring_consignment
-#: code:_description:0
-#: model:ir.model,name:recurring_consignment.model_invoice_commission_wizard
-#, python-format
-msgid "invoice.commission.wizard"
-msgstr "invoice.commission.wizard"
 
