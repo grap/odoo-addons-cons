@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-01 22:48+0000\n"
-"PO-Revision-Date: 2016-02-01 22:48+0000\n"
+"POT-Creation-Date: 2016-02-01 23:08+0000\n"
+"PO-Revision-Date: 2016-02-01 23:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,9 +58,9 @@ msgstr "Factures de commission (%s)"
 #: code:addons/recurring_consignment/models/invoice_commission_wizard.py:176
 #, python-format
 msgid "Commission on Sale or Refunds\n"
-"(Rate : %s %%; Base : %d ; Period %s)"
-msgstr "Commissions sur vente et avoir sur vente\n"
-"(Taux : %s %%; Base : %d € ; Période : %s)"
+"(Rate : %s %%; Base : %.2f € ; Period %s)"
+msgstr "Commission sur Ventes et Avoirs\n"
+"(Rate : %s %%; Base : %.2f € ; Period %s)"
 
 #. module: recurring_consignment
 #: view:account.invoice:0
@@ -173,7 +173,7 @@ msgstr "Responsable"
 #. module: recurring_consignment
 #: field:invoice.commission.wizard,line_qty:0
 msgid "Move Lines Quantity"
-msgstr "Nombre d'écritures comptable"
+msgstr "Nombre d'écritures comptables"
 
 #. module: recurring_consignment
 #: code:_description:0
@@ -268,4 +268,16 @@ msgstr "Vous ne pouvez pas retirer le fait que ce partenaire soit un dépôt ven
 #: constraint:account.tax:0
 msgid "You have to set the same accounts as the supplier account of the selected consignor."
 msgstr "Vous devez mettre le même compte que le compte fournisseur du dépôt vendeur sélectionné."
+
+#. module: recurring_consignment
+#: model:ir.model,name:recurring_consignment.model_account_tax
+msgid "account.tax"
+msgstr "account.tax"
+
+#. module: recurring_consignment
+#: code:_description:0
+#: model:ir.model,name:recurring_consignment.model_invoice_commission_wizard
+#, python-format
+msgid "invoice.commission.wizard"
+msgstr "invoice.commission.wizard"
 
