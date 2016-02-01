@@ -22,6 +22,7 @@
 
 from datetime import datetime
 
+from openerp.osv.osv import except_osv
 from openerp.osv.orm import TransientModel
 from openerp.osv import fields
 from openerp.tools.translate import _
@@ -88,11 +89,16 @@ class InvoiceCommissionWizard(TransientModel):
         done_line_ids = []
 
         for wizard in self.browse(cr, uid, ids, context=context):
+            rate = wizard.consignor_partner_id.consignment_commission
             # Get lines to commission
             # rate = wizard.consignor_partner_id.consignment_commission
             line_ids = self._get_line_ids(
                 cr, uid, wizard.consignor_partner_id.id, wizard.period_id.id,
                 context=context)
+            if not line_ids:
+                raise except_osv(_('Error!'), _(
+                    "There is no move lines to commission for this consignor"
+                    " and this accounting period."))
 
             for line in move_line_obj.browse(
                     cr, uid, line_ids, context=context):
@@ -116,10 +122,8 @@ class InvoiceCommissionWizard(TransientModel):
                 cr, uid, invoice_vals, context=context)
             invoice_ids.append(invoice_id)
 
-            # TODO Create lines
+            # Create lines
             for key, value in grouped_data.iteritems():
-                print ">>>>>>>>>>>>>>>>>>> KEY"
-                print key, value
                 current_line_ids = [x.id for x in value]
                 invoice_line_vals = self._prepare_invoice_line(
                     cr, uid, key, value, wizard, invoice_id, context=context)
@@ -128,16 +132,21 @@ class InvoiceCommissionWizard(TransientModel):
 
                 done_line_ids += current_line_ids
 
-                # TODO Mark Move lines as commisssioned
-                # move_line_obj.write(cr, uid, current_line_ids, {
-                #     'consignment_invoice_id': invoice_id,
-                #     'consignment_commission':rate}, context=context)
+                # Mark Move lines as commisssioned
+                move_line_obj.write(cr, uid, current_line_ids, {
+                    'consignment_invoice_id': invoice_id,
+                    'consignment_commission': rate,
+                }, context=context)
 
-            # leaving_line_ids = [x for x in line_ids if x not in done_line_ids]
-            # #TODO Mark leaving Move lines as no commisssioned
-            # move_line_obj.write(cr, uid, leaving_line_ids, {
-            #     'consignment_invoice_id': invoice_id,
-            #     'consignment_commission':0}, context=context)
+            # Mark leaving Move lines as no commisssioned
+            leaving_line_ids = [x for x in line_ids if x not in done_line_ids]
+            move_line_obj.write(cr, uid, leaving_line_ids, {
+                'consignment_invoice_id': invoice_id,
+                'consignment_commission': 0,
+            }, context=context)
+
+        # Recompute Taxes
+        invoice_obj.button_reset_taxes(cr, uid, invoice_ids, context=context)
 
         # Return action that displays new invoices
         action_id = model_data_obj.get_object_reference(
@@ -170,20 +179,7 @@ class InvoiceCommissionWizard(TransientModel):
                     rate, total_credit, value[0].period_id.code),
 
         })
-        print res
         return res
-#        return {
-#            'invoice_id': invoice_id,
-#            'product_id': product_id.id,
-#            'quantity': 1,
-#            'price_unit': rate * total_credit,
-#            'account_id': product_id.property_account_income.id,
-#            'invoice_line_tax_id': [(6, False, [])],
-#            'name': _(
-#                "Commission on Sale or Refunds\n"
-#                "(Rate : %s; Base : %d ; Period %s)") % (
-#                    rate, total_credit, value[0].period_id.code),
-#        }
 
     # Private Section
     def _get_line_key(self, cr, uid, move_line, context=None):
@@ -196,13 +192,18 @@ class InvoiceCommissionWizard(TransientModel):
         if not (consignor_partner_id and period_id):
             return []
         partner_obj = self.pool['res.partner']
+        journal_obj = self.pool['account.journal']
         period_obj = self.pool['account.period']
         line_obj = self.pool['account.move.line']
         consignor_partner = partner_obj.browse(
             cr, uid, consignor_partner_id, context=context)
         period = period_obj.browse(cr, uid, period_id, context=context)
+        journal_ids = journal_obj.search(
+            cr, uid, [('type', 'in', ['sale', 'sale_refund'])],
+            context=context)
         return line_obj.search(cr, uid, [
             ('period_id', '=', period.id),
             ('account_id', '=', consignor_partner.consignment_account_id.id),
+            ('journal_id', 'in', journal_ids),
             ('consignment_invoice_id', '=', False),
-        ], context=context)
+        ], order='date, move_id, tax_code_id', context=context)

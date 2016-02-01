@@ -33,7 +33,7 @@
             </field>
             <xpath expr="//div[@name='buttons']" position="inside">
                 <button name="%(action_invoice_commission_wizard)d" string="Make Commissions Invoice" type="action" icon="STOCK_EXECUTE"
-                    groups="recurring_consignment.group_consignment_user"/>
+                    groups="recurring_consignment.group_consignment_user" attrs="{'invisible': [('is_consignor','=', False)]}"/>
                 <span class="consigment_label" attrs="{'invisible': [('is_consignor','=', False)]}"
                     groups="recurring_consignment.group_consignment_user">Consignor</span>
             </xpath>
@@ -46,11 +46,11 @@
             <tree string="Consignors" editable="bottom"
                     colors="gray:is_consignor==False; brown:consignment_commission == 0">
                 <field name="name" readonly="1"/>
-                <field name="is_consignor"/>
-                <field name="consignment_commission"/>
+                <field name="is_consignor" groups="recurring_consignment.group_consignment_manager"/>
+                <field name="consignment_commission" groups="recurring_consignment.group_consignment_user"/>
                 <field name="consignment_account_id" groups="recurring_consignment.group_consignment_manager"/>
                 <button name="%(action_invoice_commission_wizard)d" string="Make Commissions Invoice" type="action" icon="STOCK_EXECUTE"
-                    groups="recurring_consignment.group_consignment_user"/>
+                    groups="recurring_consignment.group_consignment_user" attrs="{'invisible': [('is_consignor','=', False)]}"/>
             </tree>
         </field>
     </record>

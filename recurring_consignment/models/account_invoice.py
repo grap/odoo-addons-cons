@@ -24,11 +24,14 @@ from openerp.osv.orm import Model
 from openerp.osv import fields
 
 
-class AccountMoveLine(Model):
-    _inherit = 'account.move.line'
+class AccountInvoice(Model):
+    _inherit = 'account.invoice'
 
     # Columns Section
     _columns = {
         'is_consignment_invoice': fields.boolean(
             string='Is Consignment Invoice', readonly=True),
+        'consignment_line_ids': fields.one2many(
+            'account.move.line', 'consignment_invoice_id',
+            'Commissionned Lines', readonly=True),
     }

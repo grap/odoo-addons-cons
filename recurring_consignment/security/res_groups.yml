@@ -24,8 +24,9 @@
     category_id: module_category_consignment
     name: User
 
+
 - !record {model: res.groups, id: group_consignment_manager}:
     category_id: module_category_consignment
     name: Manager
     implied_ids:
-        - recurring_consignment.group_consignment_user
+        - group_consignment_user
