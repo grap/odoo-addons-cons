@@ -31,7 +31,7 @@ class res_partner(Model):
 
     _columns = {
         'is_consignor': fields.boolean('Is Consignor'),
-        'consignment_commission': fields.float('Consignment Commission'),
+        'consignment_commission': fields.float('Consignment Commission Rate'),
         'consignment_account_id': fields.many2one(
             'account.account', string='Consignment Account'),
     }

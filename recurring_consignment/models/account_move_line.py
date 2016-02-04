@@ -30,6 +30,6 @@ class AccountMoveLine(Model):
     # Columns Section
     _columns = {
         'consignment_invoice_id': fields.many2one(
-            'account.invoice', string='Consignment Invoice'),
-        'consignment_commission': fields.float('Consignment Commission'),
+            'account.invoice', string='Consignment Commission Invoice'),
+        'consignment_commission': fields.float('Consignment Commission Rate'),
     }

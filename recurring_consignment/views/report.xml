@@ -17,30 +17,16 @@
 <!--You should have received a copy of the GNU Affero General Public License-->
 <!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
 <!-- ********************************************************************** -->
+
 <openerp><data>
 
-    <record id="view_account_invoice_form" model="ir.ui.view">
-        <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_form" />
-        <field name="arch" type="xml">
-            <notebook position="inside">
-                <page string="Commissionned Lines" groups="recurring_consignment.group_consignment_user">
-                    <group>
-                        <button name="%(action_report_account_invoice)d" type="action" string="Print Commission Invoice Receipt"/>
-                        <field name="consignment_line_ids" nolabel="1">
-                            <tree string="Lines" editable="bottom">
-                                <field name="date" />
-                                <field name="move_id" />
-                                <field name="debit" />
-                                <field name="credit" />
-                                <field name="consignment_commission" />
-                                <field name="tax_code_id" />
-                            </tree>
-                        </field>
-                    </group>
-                </page>
-            </notebook>
-        </field>
-    </record>
+    <report id="action_report_account_invoice" name="action.account.invoice"
+        model="account.invoice"
+        report_type="webkit"
+        file="recurring_consignment/report/account_invoice.mako"
+        header="False"
+        auto="False"
+        string="Commission Invoice Receipt"
+        />
 
 </data></openerp>

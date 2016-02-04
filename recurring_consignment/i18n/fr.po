@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-01 23:08+0000\n"
-"PO-Revision-Date: 2016-02-01 23:08+0000\n"
+"POT-Creation-Date: 2016-02-04 00:12+0000\n"
+"PO-Revision-Date: 2016-02-04 00:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,6 +49,23 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: recurring_consignment
+#: code:addons/recurring_consignment/models/account_invoice.py:38
+#, python-format
+msgid "Chiffre d'affaire HT (TVA 5,5%)"
+msgstr "Chiffre d'affaire HT (TVA 5,5%)"
+
+#. module: recurring_consignment
+#: code:addons/recurring_consignment/models/account_invoice.py:40
+#, python-format
+msgid "Chiffre d'affaire à HT (TVA 20%)"
+msgstr "Chiffre d'affaire à HT (TVA 20%)"
+
+#. module: recurring_consignment
+#: model:ir.actions.report.xml,name:recurring_consignment.action_report_account_invoice
+msgid "Commission Invoice Receipt"
+msgstr "Justificatif de facture de commission"
+
+#. module: recurring_consignment
 #: code:addons/recurring_consignment/models/invoice_commission_wizard.py:117
 #, python-format
 msgid "Commission Invoices (%s)"
@@ -84,15 +101,15 @@ msgid "Consignment Account"
 msgstr "Compte de dépôt vente"
 
 #. module: recurring_consignment
-#: field:account.move.line,consignment_commission:0
-#: field:res.partner,consignment_commission:0
-msgid "Consignment Commission"
-msgstr "Commission sur dépôt vente"
+#: field:account.move.line,consignment_invoice_id:0
+msgid "Consignment Commission Invoice"
+msgstr "Facture de commission"
 
 #. module: recurring_consignment
-#: field:account.move.line,consignment_invoice_id:0
-msgid "Consignment Invoice"
-msgstr "Facture de commission"
+#: field:account.move.line,consignment_commission:0
+#: field:res.partner,consignment_commission:0
+msgid "Consignment Commission Rate"
+msgstr "Taux de commission"
 
 #. module: recurring_consignment
 #: field:account.tax.code,consignment_product_id:0
@@ -114,6 +131,18 @@ msgstr "Dépôt Vendeur"
 #: view:res.partner:0
 msgid "Consignors"
 msgstr "Dépôt vendeurs"
+
+#. module: recurring_consignment
+#: code:addons/recurring_consignment/models/account_invoice.py:46
+#, python-format
+msgid "Encaissement de TVA à 20%"
+msgstr "Encaissement de TVA à 20%"
+
+#. module: recurring_consignment
+#: code:addons/recurring_consignment/models/account_invoice.py:44
+#, python-format
+msgid "Encaissement de TVA à 5,5%"
+msgstr "Encaissement de TVA à 5,5%"
 
 #. module: recurring_consignment
 #: code:addons/recurring_consignment/models/invoice_commission_wizard.py:99
@@ -183,6 +212,11 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: recurring_consignment
+#: view:account.invoice:0
+msgid "Print Commission Invoice Receipt"
+msgstr "Imprimer un justificatif de facture de commission"
+
+#. module: recurring_consignment
 #: code:_description:0
 #: model:ir.model,name:recurring_consignment.model_product_product
 #, python-format
@@ -218,7 +252,7 @@ msgstr "Indiquer un produit de type 'commission sur vente' pour les commissions 
 #. module: recurring_consignment
 #: view:invoice.commission.wizard:0
 msgid "Settings"
-msgstr "Settings"
+msgstr "Paramétrages"
 
 #. module: recurring_consignment
 #: code:_description:0
@@ -275,9 +309,6 @@ msgid "account.tax"
 msgstr "account.tax"
 
 #. module: recurring_consignment
-#: code:_description:0
-#: model:ir.model,name:recurring_consignment.model_invoice_commission_wizard
-#, python-format
-msgid "invoice.commission.wizard"
-msgstr "invoice.commission.wizard"
-
+#: field:account.invoice,commission_information:0
+msgid "Commission Information"
+msgstr "Information sur la commission"

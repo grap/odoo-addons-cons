@@ -76,6 +76,7 @@ Copyright, Authors and Licence:
     'data': [
         'security/ir_module_category.yml',
         'security/res_groups.yml',
+        'views/report.xml',
         'views/action_popup.xml',
         'views/account_invoice_view.xml',
         'views/account_tax_view.xml',
