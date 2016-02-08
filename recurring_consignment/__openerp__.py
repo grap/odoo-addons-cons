@@ -72,6 +72,8 @@ Copyright, Authors and Licence:
         'simple_tax_account',
         'purchase',
         'account_voucher',
+        'point_of_sale',
+        'sale',
     ],
     'data': [
         'security/ir_module_category.yml',
