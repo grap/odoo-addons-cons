@@ -21,7 +21,7 @@
 ##############################################################################
 
 - !context
-    noupdate: 0
+    noupdate: 1
 
 - !record {model: account.account, id: account_consignor_1}:
     code: X111-CONSIG
