@@ -22,6 +22,8 @@
 
 - !record {model: product.product, id: consigned_product_consignor_1_vat_5}:
     name: My Consigned Product (with VAT 5% - Consignor 1)
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
     sale_ok: True
     purchase_ok: False
     consignor_partner_id: consignor_1
@@ -29,6 +31,8 @@
 
 - !record {model: product.product, id: consigned_product_consignor_1_vat_20}:
     name: My Consigned Product (with VAT 20% - Consignor 1)
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
     sale_ok: True
     purchase_ok: False
     consignor_partner_id: consignor_1
@@ -36,6 +40,8 @@
 
 - !record {model: product.product, id: commission_product_vat_5}:
     name: Commission (5% Price Incl.) (For Products VAT 5%)
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
     sale_ok: True
     purchase_ok: False
     tax_group_id: tax_group_5_vat_include
@@ -45,6 +51,8 @@
 
 - !record {model: product.product, id: commission_product_vat_20}:
     name: Commission (20% Price Excl., For Products VAT 20%)
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
     sale_ok: True
     purchase_ok: False
     tax_group_id: tax_group_20_vat_exclude
