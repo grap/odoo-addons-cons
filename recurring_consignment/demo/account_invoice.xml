@@ -79,7 +79,8 @@
     </function>
 
     <!-- Confirm Invoices-->
-    <workflow model="account.invoice" action="invoice_open" ref="customer_invoice_1"/>
-    <workflow model="account.invoice" action="invoice_open" ref="customer_invoice_2"/>
+<!-- TODO FIXME bug because -->
+<!--    <workflow model="account.invoice" action="invoice_open" ref="customer_invoice_1"/>-->
+<!--    <workflow model="account.invoice" action="invoice_open" ref="customer_invoice_2"/>-->
 
 </data></openerp>
