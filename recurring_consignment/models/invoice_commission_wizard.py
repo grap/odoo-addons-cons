@@ -206,4 +206,5 @@ class InvoiceCommissionWizard(TransientModel):
             ('account_id', '=', consignor_partner.consignment_account_id.id),
             ('journal_id', 'in', journal_ids),
             ('consignment_invoice_id', '=', False),
+            ('partner_id', '!=', consignor_partner.id),
         ], order='date, move_id, tax_code_id', context=context)
