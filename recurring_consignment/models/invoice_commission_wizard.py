@@ -192,6 +192,8 @@ class InvoiceCommissionWizard(TransientModel):
         if not (consignor_partner_id and period_id):
             return []
         partner_obj = self.pool['res.partner']
+        invoice_obj = self.pool['account.invoice']
+        move_obj = self.pool['account.move']
         journal_obj = self.pool['account.journal']
         period_obj = self.pool['account.period']
         line_obj = self.pool['account.move.line']
@@ -201,10 +203,22 @@ class InvoiceCommissionWizard(TransientModel):
         journal_ids = journal_obj.search(
             cr, uid, [('type', 'in', ['sale', 'sale_refund'])],
             context=context)
+        # Get Lines to ignore
+        ignore_move_line_ids = []
+        ignore_invoice_ids = invoice_obj.search(cr, uid, [
+            ('is_consignment_invoice', '=', True),
+            ('period_id', '=', period.id),
+            ('partner_id', '=', consignor_partner_id),
+        ], context=context)
+        ignore_moves = [x.move_id for x in invoice_obj.browse(
+            cr, uid, ignore_invoice_ids, context=context)]
+        for ignore_move in ignore_moves:
+            ignore_move_line_ids += [x.id for x in ignore_move.line_id]
+        # Get lines to commission
         return line_obj.search(cr, uid, [
             ('period_id', '=', period.id),
             ('account_id', '=', consignor_partner.consignment_account_id.id),
             ('journal_id', 'in', journal_ids),
             ('consignment_invoice_id', '=', False),
-            ('partner_id', '!=', consignor_partner.id),
+            ('id', 'not in', ignore_move_line_ids),
         ], order='date, move_id, tax_code_id', context=context)
