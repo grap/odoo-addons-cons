@@ -193,7 +193,6 @@ class InvoiceCommissionWizard(TransientModel):
             return []
         partner_obj = self.pool['res.partner']
         invoice_obj = self.pool['account.invoice']
-        move_obj = self.pool['account.move']
         journal_obj = self.pool['account.journal']
         period_obj = self.pool['account.period']
         line_obj = self.pool['account.move.line']
