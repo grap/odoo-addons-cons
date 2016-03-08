@@ -108,6 +108,7 @@ class AccountInvoice(Model):
     def _get_product_detail(
             self, cr, uid, ids, name, args, context=None):
         res = {}
+        user_obj = self.pool['res.users']
         invoice_obj = self.pool['account.invoice']
         invoice_line_obj = self.pool['account.invoice.line']
         order_obj = self.pool['pos.order']
@@ -155,33 +156,38 @@ class AccountInvoice(Model):
                     com_invoice_line. price_subtotal_taxinc,
                 }
 
-            # Get related pos order
-            com_order_ids = order_obj.search(cr, uid, [
-                ('account_move', 'in', move_ids)], context=context)
+            # Tricky. The ORM call this function when basic user without
+            # PoS Access want to print invoices
+            if user_obj.has_group(
+                    cr, uid, 'recurring_consignment.group_consignment_user'):
+                # Get related pos order
+                com_order_ids = order_obj.search(cr, uid, [
+                    ('account_move', 'in', move_ids)], context=context)
 
-            com_order_line_ids = order_line_obj.search(cr, uid, [
-                ('order_id', 'in', com_order_ids),
-                ('product_id', 'in', consignor_product_ids)], context=context)
+                com_order_line_ids = order_line_obj.search(cr, uid, [
+                    ('order_id', 'in', com_order_ids),
+                    ('product_id', 'in', consignor_product_ids)],
+                    context=context)
 
-            for com_order_line in order_line_obj.browse(
-                    cr, uid, com_order_line_ids, context=context):
-                key = (
-                    com_order_line.product_id.id,
-                    com_order_line.price_unit,
-                    com_order_line.discount,
-                )
-                groups.setdefault(key, {
-                    'quantity': 0,
-                    'total_vat_excl': 0,
-                    'total_vat_incl': 0})
-                groups[key] = {
-                    'quantity': groups[key]['quantity'] +
-                    com_order_line.qty,
-                    'total_vat_excl': groups[key]['total_vat_excl'] +
-                    com_order_line.price_subtotal,
-                    'total_vat_incl': groups[key]['total_vat_incl'] +
-                    com_order_line.price_subtotal_incl,
-                }
+                for com_order_line in order_line_obj.browse(
+                        cr, uid, com_order_line_ids, context=context):
+                    key = (
+                        com_order_line.product_id.id,
+                        com_order_line.price_unit,
+                        com_order_line.discount,
+                    )
+                    groups.setdefault(key, {
+                        'quantity': 0,
+                        'total_vat_excl': 0,
+                        'total_vat_incl': 0})
+                    groups[key] = {
+                        'quantity': groups[key]['quantity'] +
+                        com_order_line.qty,
+                        'total_vat_excl': groups[key]['total_vat_excl'] +
+                        com_order_line.price_subtotal,
+                        'total_vat_incl': groups[key]['total_vat_incl'] +
+                        com_order_line.price_subtotal_incl,
+                    }
 
             # Compute sum of each product
             for key, value in groups.iteritems():
