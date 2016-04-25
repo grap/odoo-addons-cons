@@ -68,9 +68,9 @@ class res_partner(Model):
             vals.update({
                 'simple_tax_type': 'excluded',
                 'property_account_payable':
-                    vals.get('consignment_account_id', False),
+                vals.get('consignment_account_id', False),
                 'property_account_receivable':
-                    vals.get('consignment_account_id', False),
+                vals.get('consignment_account_id', False),
             })
         return super(res_partner, self).create(
             cr, uid, vals, context=context)
@@ -91,9 +91,9 @@ class res_partner(Model):
                     if 'consignment_account_id' in vals:
                         vals.update({
                             'property_account_payable':
-                                vals.get('consignment_account_id', False),
+                            vals.get('consignment_account_id', False),
                             'property_account_receivable':
-                                vals.get('consignment_account_id', False),
+                            vals.get('consignment_account_id', False),
                         })
                 elif set([
                         'simple_tax_type', 'property_account_payable',

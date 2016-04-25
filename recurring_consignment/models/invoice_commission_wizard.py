@@ -116,7 +116,7 @@ class InvoiceCommissionWizard(TransientModel):
                 'type': 'out_invoice',
                 'name': _('Commission Invoices (%s)') % wizard.period_id.code,
                 'account_id':
-                    wizard.consignor_partner_id.consignment_account_id.id,
+                wizard.consignor_partner_id.consignment_account_id.id,
             }
             invoice_id = invoice_obj.create(
                 cr, uid, invoice_vals, context=context)
@@ -176,7 +176,7 @@ class InvoiceCommissionWizard(TransientModel):
             'name':  _(
                 "Commission on Sale or Refunds\n"
                 "(Rate : %s %%; Base : %.2f € ; Period %s)") % (
-                    rate, total_credit, value[0].period_id.code),
+                rate, total_credit, value[0].period_id.code),
 
         })
         return res
