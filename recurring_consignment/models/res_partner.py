@@ -33,7 +33,8 @@ class res_partner(Model):
         'is_consignor': fields.boolean('Is Consignor'),
         'consignment_commission': fields.float('Consignment Commission Rate'),
         'consignment_account_id': fields.many2one(
-            'account.account', string='Consignment Account'),
+            'account.account', string='Consignment Account',
+            domain="[('type', 'in', ['other', 'receivable', 'payable'])]"),
     }
 
     # Constraint Section
@@ -62,20 +63,15 @@ class res_partner(Model):
     ]
 
     # Create / write Overload Section
-    def _update_vals_consignment(self, cr, uid, vals, context=None):
-        vals.pop('simple_tax_type', False)
-        vals.pop('property_account_payable', False)
-        vals.pop('property_account_receivable', False)
-        if vals.get('consignment_account_id', False):
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('is_consignor', False):
             vals.update({
                 'simple_tax_type': 'excluded',
-                'property_account_payable': vals['consignment_account_id'],
-                'property_account_receivable': vals['consignment_account_id'],
+                'property_account_payable':
+                    vals.get('consignment_account_id', False),
+                'property_account_receivable':
+                    vals.get('consignment_account_id', False),
             })
-        return vals
-
-    def create(self, cr, uid, vals, context=None):
-        vals = self._update_vals_consignment(cr, uid, vals, context=context)
         return super(res_partner, self).create(
             cr, uid, vals, context=context)
 
@@ -86,6 +82,26 @@ class res_partner(Model):
                     raise except_osv(_('Error!'), _(
                         "You can not unset consignor setting on partner.\n"
                         " Please create a new one if you want to do so."))
-        vals = self._update_vals_consignment(cr, uid, vals, context=context)
+        for partner in self.browse(cr, uid, ids, context=context):
+            if partner.is_consignor:
+                if len(ids) == 1:
+                    vals.pop('simple_tax_type', False)
+                    vals.pop('property_account_payable', False)
+                    vals.pop('property_account_receivable', False)
+                    if 'consignment_account_id' in vals:
+                        vals.update({
+                            'property_account_payable':
+                                vals.get('consignment_account_id', False),
+                            'property_account_receivable':
+                                vals.get('consignment_account_id', False),
+                        })
+                elif set([
+                        'simple_tax_type', 'property_account_payable',
+                        'property_account_receivable',
+                        'consignment_account_id']) & set(vals.keys()):
+                    raise except_osv(_('Error!'), _(
+                        "You can not change this settings (Tax Type and"
+                        " Accounting Properties) for many partners if some"
+                        " of them are consignors."))
         return super(res_partner, self).write(
             cr, uid, ids, vals, context=context)
