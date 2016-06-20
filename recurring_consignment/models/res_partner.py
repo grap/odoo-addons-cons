@@ -42,8 +42,7 @@ class res_partner(Model):
             self, cr, uid, ids, context=None):
         for partner in self.browse(cr, uid, ids, context=context):
             if partner.is_consignor:
-                if not (partner.consignment_account_id and
-                        partner.consignment_commission != 0):
+                if not partner.consignment_account_id:
                     return False
             else:
                 if (partner.consignment_account_id or
@@ -54,8 +53,7 @@ class res_partner(Model):
     _constraints = [
         (
             _check_is_consignor_consignment_account_id,
-            "A Consignor must have a not null 'Consignment Commission'"
-            " and a 'Consignment Account' defined.\n\n"
+            "A Consignor must have a 'Consignment Account' defined.\n\n"
             " a Non Consignor partner can not have 'Consignment Commission'"
             " neither 'Consignment Account' defined.",
             ['is_consignor', 'consignment_commission',
