@@ -103,4 +103,5 @@ Copyright, Authors and Licence:
     'css': [
         'static/src/css/recurring_consignment.css',
     ],
+    'installable': True,
 }
