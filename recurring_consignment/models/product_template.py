@@ -27,6 +27,17 @@ from openerp.osv import fields
 class product_template(Model):
     _inherit = 'product.template'
 
+
+    # View Section
+    def onchange_consignor_partner_id(
+            self, cr, uid, ids, consignor_partner_id, context=None):
+        """Set to False Tax group_id to force user to set correct new tax
+        group depending of the context"""
+        if consignor_partner_id:
+            return {'value': {'tax_group_id': False}}
+        else:
+            return True
+
     # Compute Section
     def get_is_consignment(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -85,7 +96,6 @@ class product_template(Model):
                 'name': vals.get('consignor_partner_id'),
                 'company_id': partner.company_id.id,
                 'pricelist_ids': [],
-                'package_qty': 1,  # FIXME
             }]]
         return vals
 

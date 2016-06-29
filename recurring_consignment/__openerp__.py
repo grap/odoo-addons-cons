@@ -57,6 +57,12 @@ Product Model
     * The product can not have seller_ids defined;
     * The product has a special VAT defined;
 
+TODO :  
+
+- Ajouter le justificatif de commission dans le mail à envoyer. (surcharger account.invoice ?)
+
+- 
+
 Copyright, Authors and Licence:
 -------------------------------
 
@@ -74,19 +80,21 @@ Copyright, Authors and Licence:
         'account_voucher',
         'point_of_sale',
         'sale',
+        'report_webkit',
     ],
     'data': [
         'security/ir_module_category.yml',
         'security/res_groups.yml',
         'views/report.xml',
         'views/action_popup.xml',
-        'views/account_invoice_view.xml',
-        'views/account_tax_view.xml',
-        'views/account_tax_code_view.xml',
-        'views/tax_group_view.xml',
-        'views/product_product_view.xml',
-        'views/invoice_commission_wizard_view.xml',
-        'views/res_partner_view.xml',
+        'views/view_account_invoice.xml',
+        'views/view_account_tax.xml',
+        'views/view_account_tax_code.xml',
+        'views/view_tax_group.xml',
+        'views/view_product_product.xml',
+        'views/view_product_template.xml',
+        'views/view_invoice_commission_wizard.xml',
+        'views/view_res_partner.xml',
         'views/action.xml',
         'views/menu.xml',
     ],

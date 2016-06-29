@@ -32,10 +32,12 @@
 
 - !record {model: tax.group, id: tax_group_5_consignor_1}:
     name: Tax Group 5% (Consignor 1)
+    consignor_partner_id: consignor_1
     customer_tax_ids:
         - tax_5_consignor_1
 
 - !record {model: tax.group, id: tax_group_20_consignor_1}:
     name: Tax Group 20% (Consignor 1)
+    consignor_partner_id: consignor_1
     customer_tax_ids:
         - tax_20_consignor_1

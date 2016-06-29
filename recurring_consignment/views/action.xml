@@ -1,34 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- ********************************************************************** -->
-<!--    Sale - Recurring Consignment module for Odoo                        -->
-<!--    Copyright (C) 2015-Today GRAP (http://www.grap.coop)                -->
-<!--    @author Sylvain LE GAL (https://twitter.com/legalsylvain)           -->
-
-<!--This program is free software: you can redistribute it and/or modify    -->
-<!--it under the terms of the GNU Affero General Public License as          -->
-<!--published by the Free Software Foundation, either version 3 of the      -->
-<!--License, or (at your option) any later version.                         -->
-
-<!--This program is distributed in the hope that it will be useful,         -->
-<!--but WITHOUT ANY WARRANTY; without even the implied warranty of          -->
-<!--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           -->
-<!--GNU Affero General Public License for more details.                     -->
-
-<!--You should have received a copy of the GNU Affero General Public License-->
-<!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
-<!-- ********************************************************************** -->
+<!--
+Copyright (C) 2015-Today GRAP (http://www.grap.coop)
+@author: Sylvain LE GAL (https://twitter.com/legalsylvain)
+License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
 
 <openerp><data>
 
-<!-- Model: product.product -->
-    <record id="action_product_product_consignment" model="ir.actions.act_window">
+<!-- Model: product.template -->
+    <record id="action_product_template" model="ir.actions.act_window">
         <field name="name">Products (Consignment)</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">product.product</field>
+        <field name="res_model">product.template</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree</field>
         <field name="context">{'search_default_is_consignment':1}</field>
-        <field name="view_id" ref="view_product_product_consignment_tree"/>
+        <field name="view_id" ref="view_product_template_tree"/>
     </record>
 
 <!-- Model: res.partner -->

@@ -21,7 +21,7 @@
 ##############################################################################
 
 - !record {model: res.partner, id: consignor_1}:
-    name: My Consignor #1 (with VAT)
+    name: Consignor 1 (with VAT)
     customer: True
     supplier: False
     is_consignor: True
