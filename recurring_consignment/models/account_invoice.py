@@ -34,20 +34,32 @@ class AccountInvoice(Model):
     def _get_commission_key(self, cr, uid, move_line, context=None):
         if move_line.tax_code_id:
             # That is Vat Excl Revenue
-            if '5,5' in move_line.tax_code_id.name:
+            if '2,1' in move_line.tax_code_id.name:
+                return (
+                    'revenue',
+                    _("Encaissement de Chiffre d'affaire HT (TVA à 2,1%)"))
+            elif '5,5' in move_line.tax_code_id.name:
                 return (
                     'revenue',
                     _("Encaissement de Chiffre d'affaire HT (TVA à 5,5%)"))
+            elif '20' in move_line.tax_code_id.name:
+                return (
+                    'revenue',
+                    _("Encaissement de Chiffre d'affaire HT (TVA à 20,0%)"))
             else:
                 return (
                     'revenue',
-                    _("Encaissement de Chiffre d'affaire HT (TVA à 20%)"))
+                    _("Erreur TVA non trouvée"))
         else:
             # That is Tax
-            if '5,5' in move_line.name:
+            if '2,1' in move_line.name:
+                return ('tax', _('Encaissement de TVA à 2,1%'))
+            elif '5,5' in move_line.name:
                 return ('tax', _('Encaissement de TVA à 5,5%'))
+            elif '20' in move_line.name:
+                return ('tax', _('Encaissement de TVA à 20,0%'))
             else:
-                return ('tax', _('Encaissement de TVA à 20%'))
+                return ('tax', _('Erreur TVA non trouvée'))
 
     def _get_sorted_consignment_lines(
             self, cr, uid, move_lines, order, context=None):

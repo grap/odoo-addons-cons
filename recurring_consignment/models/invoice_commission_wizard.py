@@ -39,6 +39,9 @@ class InvoiceCommissionWizard(TransientModel):
         'period_id': fields.many2one(
             'account.period', string='Accounting Period', required=True,
             domain="[('special', '=', False), ('state', '=', 'draft')]"),
+        'extra_period_id': fields.many2one(
+            'account.period', string='Extra Accounting Period',
+            domain="[('special', '=', False), ('state', '=', 'draft')]"),
         'line_qty': fields.integer(
             string='Move Lines Quantity', readonly=True),
     }
@@ -61,7 +64,7 @@ class InvoiceCommissionWizard(TransientModel):
             cr, uid, context=context)
         period_id = self._default_period_id(cr, uid, context=context)
         line_ids = self._get_line_ids(
-            cr, uid, consignor_partner_id, period_id, context=context)
+            cr, uid, consignor_partner_id, [period_id], context=context)
         return line_ids and len(line_ids) or 0
 
     _defaults = {
@@ -72,9 +75,11 @@ class InvoiceCommissionWizard(TransientModel):
 
     # On Change Section
     def on_change_consignor_partner_id_period_id(
-            self, cr, uid, ids, consignor_partner_id, period_id, context=None):
+            self, cr, uid, ids, consignor_partner_id, period_id,
+            extra_period_id, context=None):
+        period_ids = [period_id, extra_period_id]
         line_ids = self._get_line_ids(
-            cr, uid, consignor_partner_id, period_id, context=context)
+            cr, uid, consignor_partner_id, period_ids, context=context)
         return {'value': {'line_qty': len(line_ids)}}
 
     # Action Section
@@ -93,7 +98,8 @@ class InvoiceCommissionWizard(TransientModel):
             # Get lines to commission
             # rate = wizard.consignor_partner_id.consignment_commission
             line_ids = self._get_line_ids(
-                cr, uid, wizard.consignor_partner_id.id, wizard.period_id.id,
+                cr, uid, wizard.consignor_partner_id.id,
+                [wizard.period_id.id, wizard.extra_period_id.id],
                 context=context)
             if not line_ids:
                 raise except_osv(_('Error!'), _(
@@ -188,8 +194,10 @@ class InvoiceCommissionWizard(TransientModel):
             move_line.tax_code_id.id)
 
     def _get_line_ids(
-            self, cr, uid, consignor_partner_id, period_id, context=None):
-        if not (consignor_partner_id and period_id):
+            self, cr, uid, consignor_partner_id, period_ids, context=None):
+        while False in period_ids:
+            period_ids.remove(False)
+        if not (consignor_partner_id and period_ids):
             return []
         partner_obj = self.pool['res.partner']
         invoice_obj = self.pool['account.invoice']
@@ -198,7 +206,7 @@ class InvoiceCommissionWizard(TransientModel):
         line_obj = self.pool['account.move.line']
         consignor_partner = partner_obj.browse(
             cr, uid, consignor_partner_id, context=context)
-        period = period_obj.browse(cr, uid, period_id, context=context)
+        periods = period_obj.browse(cr, uid, period_ids, context=context)
         journal_ids = journal_obj.search(
             cr, uid, [('type', 'in', ['sale', 'sale_refund'])],
             context=context)
@@ -206,7 +214,7 @@ class InvoiceCommissionWizard(TransientModel):
         ignore_move_line_ids = []
         ignore_invoice_ids = invoice_obj.search(cr, uid, [
             ('is_consignment_invoice', '=', True),
-            ('period_id', '=', period.id),
+            ('period_id', 'in', [x.id for x in periods]),
             ('partner_id', '=', consignor_partner_id),
         ], context=context)
         ignore_moves = [x.move_id for x in invoice_obj.browse(
@@ -215,7 +223,7 @@ class InvoiceCommissionWizard(TransientModel):
             ignore_move_line_ids += [x.id for x in ignore_move.line_id]
         # Get lines to commission
         return line_obj.search(cr, uid, [
-            ('period_id', '=', period.id),
+            ('period_id', 'in', [x.id for x in periods]),
             ('account_id', '=', consignor_partner.consignment_account_id.id),
             ('journal_id', 'in', journal_ids),
             ('consignment_invoice_id', '=', False),

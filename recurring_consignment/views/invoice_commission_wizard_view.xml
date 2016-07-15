@@ -25,9 +25,11 @@
             <form string="Make Commissions Invoice" version="7.0">
                 <group string="Settings">
                     <field name="consignor_partner_id"
-                        on_change="on_change_consignor_partner_id_period_id(consignor_partner_id, period_id)"/>
+                        on_change="on_change_consignor_partner_id_period_id(consignor_partner_id, period_id, extra_period_id)"/>
                     <field name="period_id"
-                        on_change="on_change_consignor_partner_id_period_id(consignor_partner_id, period_id)"/>
+                        on_change="on_change_consignor_partner_id_period_id(consignor_partner_id, period_id, extra_period_id)"/>
+                    <field name="extra_period_id"
+                        on_change="on_change_consignor_partner_id_period_id(consignor_partner_id, period_id, extra_period_id)"/>
                     <field name="line_qty"/>
                 </group>
                 <footer>
