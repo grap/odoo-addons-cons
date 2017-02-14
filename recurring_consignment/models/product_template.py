@@ -27,7 +27,6 @@ from openerp.osv import fields
 class product_template(Model):
     _inherit = 'product.template'
 
-
     # View Section
     def onchange_consignor_partner_id(
             self, cr, uid, ids, consignor_partner_id, context=None):

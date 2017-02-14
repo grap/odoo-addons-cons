@@ -57,11 +57,10 @@ Product Model
     * The product can not have seller_ids defined;
     * The product has a special VAT defined;
 
-TODO :  
+TODO :
 
-- Ajouter le justificatif de commission dans le mail à envoyer. (surcharger account.invoice ?)
-
-- 
+- Ajouter le justificatif de commission dans le mail à envoyer.
+(surcharger account.invoice ?)
 
 Copyright, Authors and Licence:
 -------------------------------
