@@ -1,70 +1,38 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Sale - Recurring Consignment module for Odoo
-#    Copyright (C) 2015 GRAP (http://www.grap.coop)
-#    @author Sylvain LE GAL (https://twitter.com/legalsylvain)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
-
-from openerp.osv.orm import Model
-from openerp.osv import fields
+# coding: utf-8
+# Copyright (C) 2015 - Today: GRAP (http://www.grap.coop)
+# @author: Sylvain LE GAL (https://twitter.com/legalsylvain)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-class account_tax(Model):
+from openerp import _, api, exceptions, fields, models
+
+
+class AccountTax(models.Model):
     _inherit = 'account.tax'
 
     # Columns Section
-    _columns = {
-        'consignor_partner_id': fields.many2one(
-            'res.partner', string='Consignor',
-            domain="[('is_consignor', '=', True)]",
-            oldname='consignor_id'),
-    }
+    consignor_partner_id = fields.Many2one(
+        string='Consignor', comodel_name='res.partner',
+        domain="[('is_consignor', '=', True)]")
 
-    def on_change_consignor_partner_id(
-            self, cr, uid, ids, consignor_partner_id, context=None):
-        partner_obj = self.pool['res.partner']
+    # Onchange Section
+    @api.onchange('consignor_partner_id')
+    def on_change_consignor_partner_id(self):
+        if not self.consignor_partner_id:
+            return
+        partner = self.consignor_partner_id
+        self.account_collected_id = partner.consignment_account_id.id
+        self.account_paid_id = partner.consignment_account_id.id
 
-        if not consignor_partner_id:
-            return {}
-        else:
-            partner = partner_obj.browse(
-                cr, uid, consignor_partner_id, context=context)
-        return {'value': {
-            'account_collected_id': partner.consignment_account_id.id,
-            'account_paid_id': partner.consignment_account_id.id,
-        }}
-
-    # Constraint Section
-    def _check_consignor_taxes(self, cr, uid, ids, context=None):
-        for tax in self.browse(cr, uid, ids, context=context):
-            if tax.consignor_partner_id:
-                if tax.consignor_partner_id.consignment_account_id.id !=\
-                        tax.account_collected_id.id or\
-                        tax.consignor_partner_id.consignment_account_id.id !=\
-                        tax.account_paid_id.id:
-                    return False
-        return True
-
-    _constraints = [
-        (
-            _check_consignor_taxes,
-            "You have to set the same"
-            " accounts as the supplier account of the selected consignor.",
-            ['consignor_partner_id', 'account_collected_id',
-                'account_paid_id'])
-    ]
+    # Constrains Section
+    @api.constrains(
+        'consignor_partner_id', 'account_collected_id', 'account_paid_id')
+    def _check_consignor_taxes(self):
+        for tax in self:
+            if tax.consignor_partner_id.consignment_account_id.id !=\
+                    tax.account_collected_id.id or\
+                    tax.consignor_partner_id.consignment_account_id.id !=\
+                    tax.account_paid_id.id:
+                raise exceptions.UserError(_(
+                    "You have to set the same accounts as the supplier account"
+                    " of the selected consignor."))

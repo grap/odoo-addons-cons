@@ -1,51 +1,25 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Sale - Recurring Consignment module for Odoo
-#    Copyright (C) 2015 GRAP (http://www.grap.coop)
-#    @author Sylvain LE GAL (https://twitter.com/legalsylvain)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# coding: utf-8
+# Copyright (C) 2015 - Today: GRAP (http://www.grap.coop)
+# @author: Sylvain LE GAL (https://twitter.com/legalsylvain)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.osv.orm import Model
-from openerp.osv import fields
+from openerp import _, api, exceptions, fields, models
 
 
-class tax_group(Model):
+class TaxGroup(models.Model):
     _inherit = 'tax.group'
 
     # Columns Section
-    _columns = {
-        'consignor_partner_id': fields.many2one(
-            'res.partner', string='Consignor',
-            domain="[('is_consignor', '=', True)]",
-            oldname='consignor_id'),
-    }
+    consignor_partner_id = fields.Many2one(
+        string='Consignor', comodel_name='res.partner',
+        domain="[('is_consignor', '=', True)]")
 
-    # Constraint Section
-    def _check_consignor_supplier_tax_ids(self, cr, uid, ids, context=None):
-        for tax_group in self.browse(cr, uid, ids, context=context):
+    # Constrains Section
+    @api.constrains('supplier_tax_ids', 'consignor_partner_id')
+    def _check_consignor_supplier_tax_ids(self):
+        for tax_group in self:
             if (tax_group.consignor_partner_id and
                     len(tax_group.supplier_tax_ids)):
-                return False
-        return True
-
-    _constraints = [
-        (
-            _check_consignor_supplier_tax_ids,
-            "You can not set Supplier Taxes for tax groups used for"
-            " consignment", ['supplier_tax_ids', 'consignor_partner_id'])
-    ]
+                raise exceptions.UserError(_(
+                    "You can not set Supplier Taxes for taxes Groups used for"
+                    " consignment"))

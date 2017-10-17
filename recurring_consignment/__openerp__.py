@@ -1,84 +1,13 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Sale - Recurring Consignment module for Odoo
-#    Copyright (C) 2014 GRAP (http://www.grap.coop)
-#    @author Sylvain LE GAL (https://twitter.com/legalsylvain)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# coding: utf-8
+# Copyright (C) 2014 - Today: GRAP (http://www.grap.coop)
+# @author: Sylvain LE GAL (https://twitter.com/legalsylvain)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
-    'name': 'Sale - Recurring Consignment',
-    'version': '0.1',
-    'summary': 'Manage recurring consignment',
+    'name': 'Recurring Consignment',
+    'version': '8.0.1.0.0',
+    'summary': 'Sale - Handle Recurring Consignment',
     'category': 'Sale',
-    'description': """
-Manage recurring consignment
-============================
-
-For more information about consigment see:
-https://en.wikipedia.org/wiki/Consignment
-
-This module manage recurring consignment: A product will allways be provided
-by the same consignor and can not be provided by another way.
-
-For other implementation of consigment you could see:
-
-* (vendor_consignment_stock)[https://github.com/OCA/purchase-workflow];
-
-
-Functionality
--------------
-
-TODO :
-- basic user can only change location and email.
-Partner Model
-
-* Add a 'is_consignor' field on Partner;
-
-Product Model
-
-* Add a consignor_partner_id field (res.partner), indicating which partner
-  provide the product;
-* if consignor_partner_id is defined:
-    * The product can not have seller_ids defined;
-    * The product has a special VAT defined;
-
-TODO :
-
-- Ajouter le justificatif de commission dans le mail à envoyer.
-(surcharger account.invoice ?)
-
-- Ajouter blocage dans product. Interdire le changement de consignor, si
-  il y a un stock move associé au produit.
-  
-- Créer nouveau module:
-    * recurring_consignment_sale_margin
-    * recurring_consignment_invoice_margin
-    * recurring_consignment_pos_margin
-
---> Surcharger le get du standard_price, pour avoir 
-
-Copyright, Authors and Licence:
--------------------------------
-
-* Copyright: 2015-Today, GRAP: Groupement Régional Alimentaire de Proximité;
-* Author: Sylvain LE GAL (https://twitter.com/legalsylvain);
-* Licence: AGPL-3 (http://www.gnu.org/licenses/);
-""",
     'author': 'GRAP',
     'website': 'http://www.grap.coop',
     'license': 'AGPL-3',
@@ -92,8 +21,8 @@ Copyright, Authors and Licence:
         'report_webkit',
     ],
     'data': [
-        'security/ir_module_category.yml',
-        'security/res_groups.yml',
+        'security/ir_module_category.xml',
+        'security/res_groups.xml',
         'views/report.xml',
         'views/action_popup.xml',
         'views/view_account_invoice.xml',
@@ -108,13 +37,13 @@ Copyright, Authors and Licence:
         'views/menu.xml',
     ],
     'demo': [
-        'demo/res_groups.yml',
-        'demo/account_account.yml',
-        'demo/res_partner.yml',
-        'demo/account_tax_code.yml',
-        'demo/account_tax.yml',
-        'demo/tax_group.yml',
-        'demo/product_product.yml',
+        'demo/res_groups.xml',
+        'demo/account_account.xml',
+        'demo/res_partner.xml',
+        'demo/account_tax_code.xml',
+        'demo/account_tax.xml',
+        'demo/tax_group.xml',
+        'demo/product_product.xml',
         'demo/account_invoice.xml',
     ],
     'css': [
