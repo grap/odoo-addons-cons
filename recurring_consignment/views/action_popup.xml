@@ -7,7 +7,6 @@ License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 <openerp><data>
 
-<!-- Model: invoice.commission.wizard -->
     <record id="action_invoice_commission_wizard" model="ir.actions.act_window">
         <field name="name">Make Commissions Invoice</field>
         <field name="type">ir.actions.act_window</field>

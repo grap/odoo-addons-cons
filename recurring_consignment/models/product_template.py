@@ -3,90 +3,87 @@
 # @author: Sylvain LE GAL (https://twitter.com/legalsylvain)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.osv.orm import Model
-from openerp.osv import fields
+from openerp import _, api, fields, models
+from openerp.exceptions import Warning as UserError
 
 
-class product_template(Model):
+class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    # View Section
-    def onchange_consignor_partner_id(
-            self, cr, uid, ids, consignor_partner_id, context=None):
-        """Set to False Tax group_id to force user to set correct new tax
-        group depending of the context"""
-        if consignor_partner_id:
-            return {'value': {'tax_group_id': False}}
-        else:
-            return True
+    # Columns Section
+    consignor_partner_id = fields.Many2one(
+        string='Consignor', comodel_name='res.partner',
+        domain="[('is_consignor', '=', True)]")
+
+    is_consignment = fields.Boolean(
+        string='Is Consignment Product', store=True,
+        compute='_compute_is_consignment')
+
+    is_consignment_commission = fields.Boolean(
+        string='Is Consignment Commission')
+
+    tax_group_id = fields.Many2one(  # Overload to update domain
+        domain="[('company_id', '=', company_id),"
+        "('consignor_partner_id', '=', consignor_partner_id)]")
 
     # Compute Section
-    def get_is_consignment(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for template in self.browse(cr, uid, ids, context=context):
-            res[template.id] = (template.consignor_partner_id.id is not False)
-        return res
+    @api.depends('consignor_partner_id')
+    def _compute_is_consignment(self):
+        for template in self:
+            template.is_consignment =\
+                (template.consignor_partner_id.id is not False)
 
-    # Columns Section
-    _columns = {
-        'consignor_partner_id': fields.many2one(
-            'res.partner', string='Consignor',
-            domain="[('is_consignor', '=', True)]",
-            oldname='consignor_id'),
-        'is_consignment': fields.function(
-            get_is_consignment, type='boolean', string='Is Consignment',
-            readonly=True, store=True),
-        # Overload to update domain constraint
-        'tax_group_id': fields.many2one(
-            'tax.group', 'Tax Group',
-            domain="[('company_id', '=', company_id),"
-            "('consignor_partner_id', '=', consignor_partner_id)]",
-            help="Specify the combination of taxes for this product."
-            " This field is required. If you dont find the correct Tax"
-            " Group, Please create a new one or ask to your account"
-            " manager if you don't have the access right."),
-    }
+    # Onchange Section
+    @api.onchange('consignor_partner_id')
+    def onchange_consignor_partner_id(self):
+        if not self.consignor_partner_id:
+            return
+        else:
+            self.standard_price = 0
+            self.seller_ids = False
+            if len(self.consignor_partner_id.consignor_tax_group_ids):
+                self.tax_group_id =\
+                    self.consignor_partner_id.consignor_tax_group_ids[0]
+            else:
+                self.tax_group_id = False
 
-    # Constraint Section
-    def _check_consignor_partner_id_fields(self, cr, uid, ids, context=None):
-        for template in self.browse(cr, uid, ids, context=context):
+    # Constrains Section
+    @api.constrains('standard_price', 'consignor_partner_id', 'seller_ids')
+    def _check_consignor_partner_id_fields(self):
+        for template in self:
             if template.consignor_partner_id:
                 if template.standard_price:
-                    return False
-        return True
+                    raise UserError(_(
+                        "A consigned product must have null Cost Price"))
+                if len(template.seller_ids):
+                    raise UserError(_(
+                        "A consigned product must not have suppliers defined"))
 
-    _constraints = [
-        (
-            _check_consignor_partner_id_fields,
-            "A consigned product must have null Cost Price.\n",
-            # "A consigned product must have a uniq supplier.\n"
-            # "The supplier of a consigned product should be the consignor.\n",
-            ['consignor_partner_id', 'seller_ids']),
-    ]
+    # Overload Section
+    @api.model
+    def create(self, vals):
+        vals = self._update_vals_consignor(vals)
+        return super(ProductTemplate, self).create(vals)
 
-    def _update_vals_consignor(self, cr, uid, vals, context=None):
-        partner_obj = self.pool['res.partner']
+    @api.multi
+    def write(self, vals):
+        vals = self._update_vals_consignor(vals)
+        if vals.get('is_consignment_commission', False):
+            raise UserError(_(
+                "You can not change the value of the field"
+                " 'Is Consignment Commission'. You can disable this product"
+                " and create a new one properly."))
+        return super(ProductTemplate, self).write(vals)
+
+    # Custom Section
+    @api.model
+    def _update_vals_consignor(self, vals):
+        partner_obj = self.env['res.partner']
         if vals.get('consignor_partner_id', False):
-            partner = partner_obj.browse(
-                cr, uid, vals.get('consignor_partner_id'), context=context)
+            partner = partner_obj.browse(vals.get('consignor_partner_id'))
             vals['purchase_ok'] = True
             vals['property_account_income'] =\
                 partner.consignment_account_id.id
             vals['property_account_expense'] =\
                 partner.consignment_account_id.id
-            vals['seller_ids'] = [[0, False, {
-                'name': vals.get('consignor_partner_id'),
-                'company_id': partner.company_id.id,
-                'pricelist_ids': [],
-            }]]
         return vals
-
-    def create(self, cr, uid, vals, context=None):
-        vals = self._update_vals_consignor(cr, uid, vals, context=context)
-        return super(product_template, self).create(
-            cr, uid, vals, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        vals = self._update_vals_consignor(cr, uid, vals, context=context)
-        return super(product_template, self).write(
-            cr, uid, ids, vals, context=context)

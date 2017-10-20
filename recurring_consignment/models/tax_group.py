@@ -3,7 +3,8 @@
 # @author: Sylvain LE GAL (https://twitter.com/legalsylvain)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import _, api, exceptions, fields, models
+from openerp import _, api, fields, models
+from openerp.exceptions import Warning as UserError
 
 
 class TaxGroup(models.Model):
@@ -20,6 +21,6 @@ class TaxGroup(models.Model):
         for tax_group in self:
             if (tax_group.consignor_partner_id and
                     len(tax_group.supplier_tax_ids)):
-                raise exceptions.UserError(_(
+                raise UserError(_(
                     "You can not set Supplier Taxes for taxes Groups used for"
                     " consignment"))

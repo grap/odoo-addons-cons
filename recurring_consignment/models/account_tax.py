@@ -4,7 +4,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from openerp import _, api, exceptions, fields, models
+from openerp import _, api, fields, models
+from openerp.exceptions import Warning as UserError
 
 
 class AccountTax(models.Model):
@@ -33,6 +34,6 @@ class AccountTax(models.Model):
                     tax.account_collected_id.id or\
                     tax.consignor_partner_id.consignment_account_id.id !=\
                     tax.account_paid_id.id:
-                raise exceptions.UserError(_(
+                raise UserError(_(
                     "You have to set the same accounts as the supplier account"
                     " of the selected consignor."))

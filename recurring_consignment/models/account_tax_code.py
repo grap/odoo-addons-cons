@@ -12,7 +12,7 @@ class AccountTaxCode(models.Model):
     # Columns Section
     consignment_product_id = fields.Many2one(
         string='Consignment Product', comodel_name='product.product',
-        domain="[('type', '=', 'service')]",
+        domain="[('is_consignment_commission', '=', True)]",
         help="Set a 'Sales commission' product for consignment sales.\n"
         "If not set, transaction will not be commissioned. (this case is"
         " usefull to avoid to commission taxes transaction, because in"

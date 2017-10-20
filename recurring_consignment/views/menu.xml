@@ -7,16 +7,28 @@ License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 <openerp><data>
 
-<!-- Model: product.product -->
-    <menuitem id="menu_product_template" 
-        parent="base.menu_product" sequence="16" 
-        action="action_product_template"
+    <menuitem id="menu_consignment" 
+        parent="account.menu_finance" sequence="1"
         groups="recurring_consignment.group_consignment_user"/>
 
-<!-- Model: res.partner -->
     <menuitem id="menu_res_partner" 
-        parent="base.menu_sales" sequence="21"
-        action="action_res_partner"
+        parent="menu_consignment" sequence="1"
+        action="action_res_partner"/>
+
+    <menuitem id="menu_product_template" 
+        parent="menu_consignment" sequence="2"
+        action="action_product_template"/>
+
+    <menuitem id="menu_product_product" 
+        parent="menu_consignment" sequence="3"
+        action="action_product_product"
         groups="recurring_consignment.group_consignment_user"/>
+
+
+    <menuitem id="menu_product_product_commission" 
+        parent="menu_consignment" sequence="1" 
+        action="action_product_product_commission"
+        groups="recurring_consignment.group_consignment_manager"/>
+
 
 </data></openerp>

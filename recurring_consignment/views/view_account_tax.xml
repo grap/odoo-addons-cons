@@ -12,8 +12,7 @@ License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
         <field name="inherit_id" ref="account.view_tax_form" />
         <field name="arch" type="xml">
             <field name="description" position="after">
-                <field name="consignor_partner_id" on_change="on_change_consignor_partner_id(consignor_partner_id)"
-                    groups="recurring_consignment.group_consignment_manager"/>
+                <field name="consignor_partner_id" groups="recurring_consignment.group_consignment_manager"/>
             </field>
         </field>
     </record>
