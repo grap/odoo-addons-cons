@@ -37,7 +37,7 @@ Product Model
 TODO :
 
 - Ajouter le justificatif de commission dans le mail à envoyer.
-(surcharger account.invoice ?)
+  (surcharger account.invoice ?)
 
 - Ajouter blocage dans product. Interdire le changement de consignor, si
   il y a un stock move associé au produit.
@@ -104,11 +104,6 @@ V10 Roadmap
 
 Credits
 =======
-
-Images
-------
-
-* ...
 
 Contributors
 ------------

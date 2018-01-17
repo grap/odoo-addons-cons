@@ -31,9 +31,9 @@ class AccountTax(models.Model):
     def _check_consignor_taxes(self):
         for tax in self:
             if tax.consignor_partner_id and (
-                    tax.consignor_partner_id.consignment_account_id.id !=\
-                    tax.account_collected_id.id or\
-                    tax.consignor_partner_id.consignment_account_id.id !=\
+                    tax.consignor_partner_id.consignment_account_id.id !=
+                    tax.account_collected_id.id or
+                    tax.consignor_partner_id.consignment_account_id.id !=
                     tax.account_paid_id.id):
                 raise UserError(_(
                     "You have to set the same accounts as the supplier account"
