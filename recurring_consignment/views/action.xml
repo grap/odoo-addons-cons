@@ -7,36 +7,6 @@ License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 <openerp><data>
 
-<!-- Model: product.template -->
-    <record id="action_product_template" model="ir.actions.act_window">
-        <field name="name">Product (Consignment)</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">product.template</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_is_consignment':1}</field>
-    </record>
-
-<!-- Model: product.product -->
-    <record id="action_product_product" model="ir.actions.act_window">
-        <field name="name">Product Variants (Consignment)</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">product.product</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_is_consignment':1}</field>
-    </record>
-
-    <record id="action_product_product_commission" model="ir.actions.act_window">
-        <field name="name">Product Variants (Commission)</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">product.product</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_is_consignment':1}</field>
-    </record>
-
-<!-- Model: res.partner -->
     <record id="action_res_partner" model="ir.actions.act_window">
         <field name="name">Consignors</field>
         <field name="type">ir.actions.act_window</field>
