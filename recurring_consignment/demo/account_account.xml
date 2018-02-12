@@ -4,8 +4,7 @@ Copyright (C) 2015 - Today: GRAP (http://www.grap.coop)
 @author: Sylvain LE GAL (https://twitter.com/legalsylvain)
 License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 -->
-<openerp><data>
-    <!-- TODO noupdate = 1 -->
+<openerp><data noupdate="1">
 
     <record id="account_consignor_1" model="account.account">
         <field name="name">Demo Account For Consignor</field>

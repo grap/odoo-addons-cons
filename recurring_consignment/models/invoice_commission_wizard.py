@@ -5,94 +5,70 @@
 
 from datetime import datetime
 
-from openerp.osv.osv import except_osv
-from openerp.osv.orm import TransientModel
-from openerp.osv import fields
-from openerp.tools.translate import _
+from openerp import _, api, fields, models
+from openerp.exceptions import Warning as UserError
 
 
-class InvoiceCommissionWizard(TransientModel):
+class InvoiceCommissionWizard(models.TransientModel):
     _name = 'invoice.commission.wizard'
 
-    # Columns Section
-    _columns = {
-        'consignor_partner_id': fields.many2one(
-            'res.partner', string='Consignor', required=True,
-            domain="[('is_consignor', '=', True)]"),
-        'period_id': fields.many2one(
-            'account.period', string='Accounting Period', required=True,
-            domain="[('special', '=', False), ('state', '=', 'draft')]"),
-        # TODO remove me
-        'extra_period_id': fields.many2one(
-            'account.period', string='Extra Accounting Period', readonly=True,
-            domain="[('special', '=', False), ('state', '=', 'draft')]"),
-        'line_qty': fields.integer(
-            string='Move Lines Quantity', readonly=True),
-    }
-
     # Default values Section
-    def _default_consignor_partner_id(self, cr, uid, context=None):
-        return context.get('active_id', False)
+    def _default_consignor_partner_id(self):
+        return self.env.context.get('active_id', False)
 
-    def _default_period_id(self, cr, uid, context=None):
-        "return the past accounting period"
-        period_obj = self.pool['account.period']
-        period_ids = period_obj.search(cr, uid, [
+    def _default_period_id(self):
+        "return the last past accounting period"
+        period_obj = self.env['account.period']
+        period_ids = period_obj.search([
             ('date_stop', '<', datetime.now().strftime('%Y-%m-%d')),
             ('special', '=', False)],
-            order='date_start desc', limit=1, context=context)
+            order='date_start desc', limit=1)
         return period_ids and period_ids[0] or False
 
-    def _default_line_qty(self, cr, uid, context=None):
-        consignor_partner_id = self._default_consignor_partner_id(
-            cr, uid, context=context)
-        period_id = self._default_period_id(cr, uid, context=context)
-        line_ids = self._get_line_ids(
-            cr, uid, consignor_partner_id, period_id, context=context)
-        return line_ids and len(line_ids) or 0
+    # Columns Section
+    consignor_partner_id = fields.Many2one(
+        comodel_name='res.partner', string='Consignor', required=True,
+        domain="[('is_consignor', '=', True)]",
+        default=_default_consignor_partner_id)
 
-    _defaults = {
-        'consignor_partner_id': _default_consignor_partner_id,
-        'period_id': _default_period_id,
-        'line_qty': _default_line_qty,
-    }
+    period_id = fields.Many2one(
+        comodel_name='account.period', string='Period', required=True,
+        domain="[('special', '=', False), ('state', '=', 'draft')]")
 
-    # On Change Section
-    def on_change_consignor_partner_id_period_id(
-            self, cr, uid, ids, consignor_partner_id, period_id,
-            extra_period_id, context=None):
-        line_ids = self._get_line_ids(
-            cr, uid, consignor_partner_id, period_id, context=context)
-        return {'value': {'line_qty': len(line_ids)}}
+    line_qty = fields.Integer(
+        string='Move Lines Quantity', compute='_compute_line_qty')
+
+    @api.depends('consignor_partner_id', 'period_id')
+    def _compute_line_qty(self):
+        for wizard in self:
+            lines = wizard._get_line_ids()
+            wizard.line_qty = len(lines)
 
     # Action Section
-    def invoice_commission(self, cr, uid, ids, context=None):
-        model_data_obj = self.pool['ir.model.data']
-        action_obj = self.pool['ir.actions.act_window']
-        move_line_obj = self.pool['account.move.line']
-        invoice_obj = self.pool['account.invoice']
-        invoice_line_obj = self.pool['account.invoice.line']
+    @api.multi
+    def invoice_commission(self):
+        model_data_obj = self.env['ir.model.data']
+        action_obj = self.env['ir.actions.act_window']
+        move_line_obj = self.env['account.move.line']
+        invoice_obj = self.env['account.invoice']
+        invoice_line_obj = self.env['account.invoice.line']
         invoice_ids = []
         grouped_data = {}
         done_line_ids = []
 
-        for wizard in self.browse(cr, uid, ids, context=context):
+        for wizard in self:
             rate = wizard.consignor_partner_id.consignment_commission
             # Get lines to commission
-            # rate = wizard.consignor_partner_id.consignment_commission
-            line_ids = self._get_line_ids(
-                cr, uid, wizard.consignor_partner_id.id,
-                wizard.period_id.id, context=context)
-            if not line_ids:
-                raise except_osv(_('Error!'), _(
+            lines = self._get_line_ids()
+            if not lines:
+                raise UserError(_(
                     "There is no move lines to commission for this consignor"
                     " and this accounting period."))
 
-            for line in move_line_obj.browse(
-                    cr, uid, line_ids, context=context):
+            for line in lines:
                 # If there is product commission on this line
                 if line.tax_code_id.consignment_product_id:
-                    key = self._get_line_key(cr, uid, line, context=context)
+                    key = self._get_line_key(line)
                     grouped_data.setdefault(key, [])
                     grouped_data[key].append(line)
 
@@ -106,59 +82,60 @@ class InvoiceCommissionWizard(TransientModel):
                 'account_id':
                 wizard.consignor_partner_id.consignment_account_id.id,
             }
-            invoice_id = invoice_obj.create(
-                cr, uid, invoice_vals, context=context)
-            invoice_ids.append(invoice_id)
+            invoice = invoice_obj.create(invoice_vals)
+            invoice_ids.append(invoice.id)
 
             # Create lines
             for key, value in grouped_data.iteritems():
                 current_line_ids = [x.id for x in value]
                 invoice_line_vals = self._prepare_invoice_line(
-                    cr, uid, key, value, wizard, invoice_id, context=context)
-                invoice_line_obj.create(
-                    cr, uid, invoice_line_vals, context=context)
+                    key, value, invoice)
+                invoice_line_obj.create(invoice_line_vals)
 
                 done_line_ids += current_line_ids
 
                 # Mark Move lines as commisssioned
-                move_line_obj.write(cr, uid, current_line_ids, {
-                    'consignment_invoice_id': invoice_id,
+                current_lines = move_line_obj.browse(current_line_ids)
+                current_lines.write({
+                    'consignment_invoice_id': invoice.id,
                     'consignment_commission': rate,
-                }, context=context)
+                })
 
             # Mark leaving Move lines as no commisssioned
-            leaving_line_ids = [x for x in line_ids if x not in done_line_ids]
-            move_line_obj.write(cr, uid, leaving_line_ids, {
-                'consignment_invoice_id': invoice_id,
+            leaving_line_ids = [x for x in lines.ids if x not in done_line_ids]
+            leaving_lines = move_line_obj.browse(leaving_line_ids)
+            leaving_lines.write({
+                'consignment_invoice_id': invoice.id,
                 'consignment_commission': 0,
-            }, context=context)
+            })
 
         # Recompute Taxes
-        invoice_obj.button_reset_taxes(cr, uid, invoice_ids, context=context)
+        invoices = invoice_obj.browse(invoice_ids)
+        invoices.button_reset_taxes()
 
         # Return action that displays new invoices
-        action_id = model_data_obj.get_object_reference(
-            cr, uid, 'account', 'action_invoice_tree1')[1]
-        action = action_obj.read(cr, uid, [action_id], context=context)[0]
-        action['domain'] =\
+        result = self.env.ref('account.action_invoice_tree1').read()[0]
+        result['domain'] =\
             "[('id', 'in', ["+','.join(map(str, invoice_ids))+"])]"
-        return action
+        return result
 
-    def _prepare_invoice_line(
-            self, cr, uid, key, value, wizard, invoice_id, context=None):
-        invoice_line_obj = self.pool['account.invoice.line']
+    @api.multi
+    def _prepare_invoice_line(self, key, value, invoice):
+        self.ensure_one()
+        wizard = self[0]
+        invoice_line_obj = self.env['account.invoice.line']
         rate = wizard.consignor_partner_id.consignment_commission
         total_credit = 0
         product = value[0].tax_code_id.consignment_product_id
         for line in value:
             total_credit += line.credit - line.debit
         res = invoice_line_obj.product_id_change(
-            cr, uid, False, product.id, product.uom_id.id, qty=1,
+            product.id, product.uom_id.id, qty=1,
             type='out_invoice', partner_id=wizard.consignor_partner_id.id,
-            context=None)['value']
+            )['value']
         res.update({
             'product_id': product.id,
-            'invoice_id': invoice_id,
+            'invoice_id': invoice.id,
             'price_unit': total_credit * rate / 100,
             'invoice_line_tax_id': [(6, False, res['invoice_line_tax_id'])],
             'name':  _(
@@ -170,54 +147,47 @@ class InvoiceCommissionWizard(TransientModel):
         return res
 
     # Private Section
-    def _get_line_key(self, cr, uid, move_line, context=None):
+    @api.model
+    def _get_line_key(self, move_line):
         return (
             move_line.period_id.id,
             move_line.tax_code_id.id)
 
-    def _get_line_ids(
-            self, cr, uid, consignor_partner_id, period_id, context=None):
-        if not (consignor_partner_id and period_id):
+    @api.multi
+    def _get_line_ids(self):
+        self.ensure_one()
+        wizard = self[0]
+        if not (wizard.consignor_partner_id and wizard.period_id):
             return []
 
-        partner_obj = self.pool['res.partner']
-        invoice_obj = self.pool['account.invoice']
-        journal_obj = self.pool['account.journal']
-        period_obj = self.pool['account.period']
-        line_obj = self.pool['account.move.line']
+        invoice_obj = self.env['account.invoice']
+        journal_obj = self.env['account.journal']
+        line_obj = self.env['account.move.line']
 
         # Get periods from the fiscal year, and previous to the selected one
         period_ids = []
-        selected_period = period_obj.browse(
-            cr, uid, period_id, context=context)
-        for period in selected_period.fiscalyear_id.period_ids:
-            if period.date_start <= selected_period.date_start and\
+        for period in wizard.period_id.fiscalyear_id.period_ids:
+            if period.date_start <= wizard.period_id.date_start and\
                     not period.special:
                 period_ids.append(period.id)
 
-        consignor_partner = partner_obj.browse(
-            cr, uid, consignor_partner_id, context=context)
-        journal_ids = journal_obj.search(
-            cr, uid, [('type', 'in', ['sale', 'sale_refund'])],
-            context=context)
-
         # Get Lines to ignore
-        ignore_move_line_ids = []
-        ignore_invoice_ids = invoice_obj.search(cr, uid, [
+        ignore_invoices = invoice_obj.search([
             ('is_consignment_invoice', '=', True),
             ('period_id', 'in', period_ids),
-            ('partner_id', '=', consignor_partner_id),
-        ], context=context)
-        ignore_moves = [x.move_id for x in invoice_obj.browse(
-            cr, uid, ignore_invoice_ids, context=context)]
-        for ignore_move in ignore_moves:
-            ignore_move_line_ids += [x.id for x in ignore_move.line_id]
+            ('partner_id', '=', wizard.consignor_partner_id.id),
+        ])
+        ignore_move_line_ids = ignore_invoices.mapped('move_id.line_id').ids
+
+        account_id = wizard.consignor_partner_id.consignment_account_id.id
+        journals = journal_obj.search([
+            ('type', 'in', ['sale', 'sale_refund'])])
 
         # Get lines to commission
-        return line_obj.search(cr, uid, [
+        return line_obj.search([
             ('period_id', 'in', period_ids),
-            ('account_id', '=', consignor_partner.consignment_account_id.id),
-            ('journal_id', 'in', journal_ids),
+            ('account_id', '=', account_id),
+            ('journal_id', 'in', journals.ids),
             ('consignment_invoice_id', '=', False),
             ('id', 'not in', ignore_move_line_ids),
-        ], order='date, move_id, tax_code_id', context=context)
+        ], order='date, move_id, tax_code_id')

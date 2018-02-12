@@ -23,7 +23,8 @@
     'data': [
         'security/ir_module_category.xml',
         'security/res_groups.xml',
-        'views/report.xml',
+        'report/qweb_template_account_invoice_consignment.xml',
+        'report/ir_actions_report_xml.xml',
         'views/action_popup.xml',
         'views/view_account_invoice.xml',
         'views/view_account_tax.xml',
