@@ -47,8 +47,6 @@ class InvoiceCommissionWizard(models.TransientModel):
     # Action Section
     @api.multi
     def invoice_commission(self):
-        model_data_obj = self.env['ir.model.data']
-        action_obj = self.env['ir.actions.act_window']
         move_line_obj = self.env['account.move.line']
         invoice_obj = self.env['account.invoice']
         invoice_line_obj = self.env['account.invoice.line']

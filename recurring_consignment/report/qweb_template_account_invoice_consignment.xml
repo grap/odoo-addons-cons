@@ -142,7 +142,75 @@ License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
 
+<!-- Detail Comptable -->
+                    <table border="1" cellspacing="0" style="page-break-before:always; width:100%;">
+                        <tr>
+                            <th colspan="6" style="background-color:#AAEA28">
+                                <h2>Détail des pièces comptables</h2>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="6" style="font-size: 10px; text-align:center;">
+                                Note : les valeurs aux débits peuvent correspondre à un retour de produit de la part du client, à un retour de consigne dans le cas de produit consigné, ou à l'annulation de tout ou partie d'une vente suite à une erreur de saisie.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Date</th>
+                            <th>Pièce comptable</th>
+                            <th>Libellé</th>
+                            <th>Com.</th>
+                            <th>Débit</th>
+                            <th>Crédit</th>
+                        </tr>
 
+<t t-set="accounting_lines" t-value="o.get_commission_information_accounting_detail(o)" />
+<t t-set="current" t-value="''" />
+<t t-set="color" t-value="'#FFF'" />
+<t t-set="total_debit" t-value="0" />
+<t t-set="total_credit" t-value="0" />
+
+<t t-foreach="accounting_lines" t-as="accounting_line">
+
+    <t t-set="new" t-value="(current != accounting_line['name'])" />
+    <t t-set="current" t-value="accounting_line['name']" />
+    <t t-set="total_debit" t-value=" total_debit + accounting_line['debit']" />
+    <t t-set="total_credit" t-value="total_credit + accounting_line['credit']" />
+    <t if="new">
+        <t t-set="color" t-value="(color == '#FFF') and '#DDD' or '#FFF'" />
+    </t>
+            <t t-set="tr_style" t-value="'font-size: 12px; background-color:%s;page-break-inside: avoid;' % color" />
+                        <tr t-att-style="tr_style">
+                            <td><span t-esc="accounting_line['date'][8:10]"/>/<span t-esc="accounting_line['date'][5:7]" />/<span t-esc="accounting_line['date'][0:4]" /></td>
+                            <td><span t-esc="accounting_line['name']" /></td>
+                            <td><span t-esc="accounting_line['description']" /></td>
+                            <td>
+    <t t-if="accounting_line['is_commission']">
+                                Oui
+    </t>
+                            </td>
+    <t t-if="accounting_line['debit']">
+                            <td style="text-align:right"><span t-esc="'%.2f' % accounting_line['debit']" /> €</td>
+                            <td> </td>
+    </t>
+    <t t-if="accounting_line['credit']">
+                            <td> </td>
+                            <td style="text-align:right"><span t-esc="'%.2f' % accounting_line['credit']" /> €</td>
+    </t>
+                        </tr>
+</t>
+                        <tr>
+                            <th colspan="6" style="background-color:#AAEA28">Total</th>
+                        </tr>
+                        <tr style="font-size: 12px;">
+                            <th colspan="4"> </th>
+                            <td style="text-align:right; background-color:#CCF">
+                                <span t-esc="'%.2f' % (total_debit)" /> €
+                            </td>
+                            <td style="text-align:right; background-color:#CCF">
+                                <span t-esc="'%.2f' % (total_credit)" /> €
+                            </td>
+                        </tr>
+                    </table>
 
 
 
