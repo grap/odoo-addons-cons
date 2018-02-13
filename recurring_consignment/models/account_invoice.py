@@ -66,10 +66,10 @@ class AccountInvoice(models.Model):
     def get_commission_information_product_detail(self, invoice):
         product_obj = self.env['product.product']
 
-        invoice_obj = self.pool['account.invoice']
-        invoice_line_obj = self.pool['account.invoice.line']
-        order_obj = self.pool['pos.order']
-        order_line_obj = self.pool['pos.order.line']
+        invoice_obj = self.env['account.invoice']
+        invoice_line_obj = self.env['account.invoice.line']
+        order_obj = self.env['pos.order']
+        order_line_obj = self.env['pos.order.line']
 
         groups = {}
         res = []
